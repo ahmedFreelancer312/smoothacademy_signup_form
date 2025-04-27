@@ -136,15 +136,38 @@
             position: relative;
             display: flex;
             align-items: center;
+            flex: 1;
         }
         .file-input-container i {
             position: absolute;
             left: 10px;
             color: var(--primary-color);
             font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .file-input-container i:hover {
+            color: #2980b9;
         }
         .file-input-container input[type="file"] {
             padding-left: 40px;
+            opacity: 0; /* Hide the file input */
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-container .file-display {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            min-height: 40px;
         }
         button {
             background-color: var(--primary-color);
@@ -252,8 +275,8 @@
             .file-input-container i {
                 font-size: 18px;
             }
-            .file-input-container input[type="file"] {
-                padding-left: 30px;
+            .file-input-container .file-display {
+                min-height: 36px;
             }
             .mode-toggle, .language-toggle {
                 top: 10px;
@@ -296,8 +319,9 @@
             <div class="form-group">
                 <label for="profileImage" data-i18n="profileImage">الصورة الشخصية</label>
                 <div class="file-input-container">
-                    <i class="fas fa-camera"></i>
-                    <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+                    <i class="fas fa-camera" id="cameraIcon"></i>
+                    <input type="file" id="profileImage" name="profileImage" accept="image/*" capture="environment" required>
+                    <div class="file-display" id="fileDisplay">لم يتم اختيار صورة</div>
                 </div>
             </div>
             <div class="form-group-inline">
@@ -425,7 +449,8 @@
                 notProvided: "غير مدخل",
                 noneSelected: "لم يتم اختيار أيام",
                 none: "لا توجد",
-                ok: "موافق"
+                ok: "موافق",
+                noImageSelected: "لم يتم اختيار صورة"
             },
             en: {
                 formTitle: "Swimming Activity Membership Form",
@@ -471,7 +496,8 @@
                 notProvided: "Not Provided",
                 noneSelected: "No days selected",
                 none: "None",
-                ok: "OK"
+                ok: "OK",
+                noImageSelected: "No image selected"
             }
         };
 
@@ -539,11 +565,32 @@
                 <option value="intermediate" data-i18n="intermediate">${translations[lang].intermediate}</option>
                 <option value="advanced" data-i18n="advanced">${translations[lang].advanced}</option>
             `;
+            // Update file display text
+            const fileDisplay = document.getElementById('fileDisplay');
+            fileDisplay.textContent = translations[lang].noImageSelected;
         }
 
         function updateLanguageButton(lang) {
             languageToggle.textContent = lang === 'ar' ? 'English' : 'العربية';
         }
+
+        // Camera icon click handler
+        const cameraIcon = document.getElementById('cameraIcon');
+        const profileImageInput = document.getElementById('profileImage');
+        const fileDisplay = document.getElementById('fileDisplay');
+
+        cameraIcon.addEventListener('click', () => {
+            profileImageInput.click();
+        });
+
+        // Update file display when an image is selected
+        profileImageInput.addEventListener('change', () => {
+            if (profileImageInput.files && profileImageInput.files[0]) {
+                fileDisplay.textContent = profileImageInput.files[0].name;
+            } else {
+                fileDisplay.textContent = translations[currentLanguage].noImageSelected;
+            }
+        });
 
         // Function to convert date from YYYY-MM-DD to DD/MM/YYYY
         function formatDate(dateStr) {
