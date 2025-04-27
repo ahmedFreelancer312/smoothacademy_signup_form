@@ -507,7 +507,7 @@
               id="cameraImage"
               name="profileImage"
               accept="image/*"
-              capture="environment"
+              capture="user"
             />
             <div class="file-display" id="fileDisplay">لم يتم اختيار صورة</div>
           </div>
@@ -670,6 +670,7 @@
     <div class="camera-modal" id="cameraModal">
       <div class="camera-modal-content">
         <video id="cameraStream" autoplay></video>
+        <button id="switchCameraButton" data-i18n="switchCamera">تبديل الكاميرا</button>
         <button id="captureButton" data-i18n="capture">التقاط الصورة</button>
         <button id="closeCameraButton" data-i18n="close">إغلاق</button>
       </div>
@@ -782,6 +783,7 @@
           noImageSelected: "لم يتم اختيار صورة",
           capture: "التقاط الصورة",
           close: "إغلاق",
+          switchCamera: "تبديل الكاميرا",
           cameraError:
             "فشل في الوصول إلى الكاميرا. تأكد من منح الأذونات أو حاول رفع صورة من الملفات.",
           requiredFields: "يرجى ملء جميع الحقول المطلوبة",
@@ -835,6 +837,7 @@
           noImageSelected: "No image selected",
           capture: "Capture Photo",
           close: "Close",
+          switchCamera: "Switch Camera",
           cameraError:
             "Failed to access the camera. Please ensure permissions are granted or try uploading an image from files.",
           requiredFields: "Please fill all required fields",
@@ -931,8 +934,10 @@
       const cameraStream = document.getElementById("cameraStream");
       const captureButton = document.getElementById("captureButton");
       const closeCameraButton = document.getElementById("closeCameraButton");
+      const switchCameraButton = document.getElementById("switchCameraButton");
       let stream = null;
       let capturedFile = null;
+      let currentFacingMode = "user";
 
       uploadIcon.addEventListener("click", () => {
         uploadImageInput.click();
@@ -952,10 +957,7 @@
         }
 
         try {
-          stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "environment" },
-          });
-          cameraStream.srcObject = stream;
+          await startCamera(currentFacingMode);
           cameraModal.style.display = "flex";
         } catch (error) {
           console.error("Camera access error:", error);
@@ -967,6 +969,34 @@
             confirmButtonColor: "#3498db",
           });
           cameraImageInput.click();
+        }
+      });
+
+      async function startCamera(facingMode) {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          cameraStream.srcObject = null;
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: facingMode },
+        });
+        cameraStream.srcObject = stream;
+      }
+
+      switchCameraButton.addEventListener("click", async () => {
+        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+        try {
+          await startCamera(currentFacingMode);
+        } catch (error) {
+          console.error("Error switching camera:", error);
+          Swal.fire({
+            icon: "error",
+            title: translations[currentLanguage].errorTitle,
+            text: translations[currentLanguage].cameraError,
+            confirmButtonText: translations[currentLanguage].ok,
+            confirmButtonColor: "#3498db",
+          });
         }
       });
 
@@ -1153,7 +1183,16 @@
             downloadLink.click();
 
             const whatsappMessage = encodeURIComponent(
-              `استمارة عضوية السباحة لـ ${data.fullName}`
+              `استمارة عضوية السباحة لـ ${data.fullName}
+              الرقم القومي : ${data.nationalId}
+              تاريخ الميلاد : ${data.dateOfBirth}
+              النوع : ${data.gender}
+              الإيميل : ${data.email}
+              رقم الهاتف : ${data.phone}
+              مستوي السباحه : ${data.swimmingLevel}
+              الأيام المتاحه للتدريب : ${data.trainingDays}
+              ${data.profileImage}
+              `
             );
             const whatsappLink = `https://api.whatsapp.com/send?phone=+201060940751&text=${whatsappMessage}`;
             try {
