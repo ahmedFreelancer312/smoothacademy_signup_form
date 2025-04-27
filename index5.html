@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استمارة عضوية نشاط السباحة</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --text-color: #34495e;
+            --border-color: #dcdcdc;
+        }
+        body {
+            font-family: 'Tajawal', Arial, sans-serif;
+            direction: rtl;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-header h1 {
+            color: var(--text-color);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .form-header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: var(--text-color);
+            flex: 0 0 150px;
+        }
+        input, select, textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #fafafa;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            background-color: #fff;
+            outline: none;
+        }
+        .form-group-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-group-inline .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        .checkbox-group, .radio-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-group label, .radio-group label {
+            font-weight: normal;
+            color: var(--text-color);
+            flex: none;
+            margin-right: 5px;
+        }
+        .checkbox-group input, .radio-group input {
+            margin-left: 5px;
+        }
+        .file-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .file-input-container i {
+            position: absolute;
+            left: 10px;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        .file-input-container input[type="file"] {
+            padding-left: 40px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            display: block;
+            margin: 30px auto;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .section-title {
+            font-size: 20px;
+            color: var(--text-color);
+            margin: 20px 0 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 15px;
+            }
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            label {
+                flex: none;
+                margin-bottom: 8px;
+            }
+            input, select, textarea {
+                width: 100%;
+            }
+            .form-group-inline .form-group {
+                min-width: 100%;
+            }
+            .file-input-container i {
+                font-size: 18px;
+            }
+            .file-input-container input[type="file"] {
+                padding-left: 30px;
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- docx.js for Word document generation -->
+    <script src="https://unpkg.com/docx@7.8.0/build/index.js"></script>
+    <!-- FileSaver.js for downloading the file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>استمارة عضوية نشاط السباحة</h1>
+            <p>شركة كروس آند سموث - التسجيل للموسم 2025</p>
+        </div>
+        <form id="membershipForm">
+            <div class="section-title">المعلومات الشخصية</div>
+            <div class="form-group">
+                <label for="fullName">الاسم الكامل (رباعي)</label>
+                <input type="text" id="fullName" name="fullName" placeholder="أدخل الاسم الكامل" required>
+            </div>
+            <div class="form-group">
+                <label for="profileImage">الصورة الشخصية</label>
+                <div class="file-input-container">
+                    <i class="fas fa-camera"></i>
+                    <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+                </div>
+            </div>
+            <div class="form-group-inline">
+                <div class="form-group">
+                    <label for="nationalId">رقم الهوية الوطنية</label>
+                    <input type="text" id="nationalId" name="nationalId" placeholder="أدخل رقم الهوية" required>
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">تاريخ الميلاد</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                </div>
+            </div>
+            <div class="form-group-inline">
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" name="phone" placeholder="أدخل رقم الهاتف" pattern="[0-9]{10}" title="يرجى إدخال رقم هاتف مكون من 10 أرقام" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" placeholder="أدخل البريد الإلكتروني">
+                </div>
+            </div>
+            <div class="radio-group">
+                <label>الجنس</label>
+                <input type="radio" id="male" name="gender" value="male" required>
+                <label for="male">ذكر</label>
+                <input type="radio" id="female" name="gender" value="female">
+                <label for="female">أنثى</label>
+            </div>
+
+            <div class="section-title">تفاصيل العضوية</div>
+            <div class="form-group">
+                <label for="membershipType">نوع العضوية</label>
+                <select id="membershipType" name="membershipType" required>
+                    <option value="">اختر نوع العضوية</option>
+                    <option value="monthly">شهري</option>
+                    <option value="quarterly">ربع سنوي</option>
+                    <option value="annual">سنوي</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="swimmingLevel">المستوى في السباحة</label>
+                <select id="swimmingLevel" name="swimmingLevel" required>
+                    <option value="">اختر المستوى</option>
+                    <option value="beginner">مبتدئ</option>
+                    <option value="intermediate">متوسط</option>
+                    <option value="advanced">متقدم</option>
+                </select>
+            </div>
+            <div class="checkbox-group">
+                <label>الأيام المفضلة للتدريب</label>
+                <input type="checkbox" id="sunday" name="trainingDays" value="sunday">
+                <label for="sunday">الأحد</label>
+                <input type="checkbox" id="monday" name="trainingDays" value="monday">
+                <label for="monday">الإثنين</label>
+                <input type="checkbox" id="tuesday" name="trainingDays" value="tuesday">
+                <label for="tuesday">الثلاثاء</label>
+                <input type="checkbox" id="wednesday" name="trainingDays" value="wednesday">
+                <label for="wednesday">الأربعاء</label>
+                <input type="checkbox" id="thursday" name="trainingDays" value="thursday">
+                <label for="thursday">الخميس</label>
+            </div>
+
+            <div class="section-title">معلومات إضافية</div>
+            <div class="form-group">
+                <label for="healthConditions">الحالة الصحية (إن وجدت)</label>
+                <textarea id="healthConditions" name="healthConditions" rows="4" placeholder="يرجى ذكر أي حالات صحية أو حساسية"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="emergencyContact">جهة اتصال في حالات الطوارئ</label>
+                <input type="text" id="emergencyContact" name="emergencyContact" placeholder="الاسم ورقم الهاتف" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">أوافق على شروط وأحكام العضوية</label>
+            </div>
+
+            <button type="submit">إرسال الاستمارة</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('membershipForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(this);
+            const data = {
+                fullName: formData.get('fullName'),
+                nationalId: formData.get('nationalId'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                gender: formData.get('gender'),
+                membershipType: formData.get('membershipType'),
+                swimmingLevel: formData.get('swimmingLevel'),
+                trainingDays: formData.getAll('trainingDays').join(', '),
+                healthConditions: formData.get('healthConditions'),
+                emergencyContact: formData.get('emergencyContact'),
+                terms: formData.get('terms') ? 'موافق' : 'غير موافق',
+                profileImage: formData.get('profileImage')
+            };
+
+            try {
+                // Create Word document using docx.js
+                const { Document, Packer, Paragraph, TextRun } = docx;
+                const doc = new Document({
+                    sections: [{
+                        properties: {},
+                        children: [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "استمارة عضوية نشاط السباحة",
+                                        bold: true,
+                                        size: 32,
+                                        font: "Tajawal"
+                                    })
+                                ],
+                                alignment: "center"
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "شركة كروس آند سموث - التسجيل للموسم 2025",
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ],
+                                alignment: "center",
+                                spacing: { after: 400 }
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "المعلومات الشخصية",
+                                        bold: true,
+                                        size: 28,
+                                        font: "Tajawal"
+                                    })
+                                ],
+                                spacing: { after: 200 }
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `الاسم الكامل: ${data.fullName}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `رقم الهوية الوطنية: ${data.nationalId}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `تاريخ الميلاد: ${data.dateOfBirth}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `رقم الهاتف: ${data.phone}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `البريد الإلكتروني: ${data.email || 'غير مدخل'}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `الجنس: ${data.gender === 'male' ? 'ذكر' : 'أنثى'}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "تفاصيل العضوية",
+                                        bold: true,
+                                        size: 28,
+                                        font: "Tajawal"
+                                    })
+                                ],
+                                spacing: { after: 200 }
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `نوع العضوية: ${data.membershipType === 'monthly' ? 'شهري' : data.membershipType === 'quarterly' ? 'ربع سنوي' : 'سنوي'}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `المستوى في السباحة: ${data.swimmingLevel === 'beginner' ? 'مبتدئ' : data.swimmingLevel === 'intermediate' ? 'متوسط' : 'متقدم'}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `الأيام المفضلة للتدريب: ${data.trainingDays || 'لم يتم اختيار أيام'}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: "معلومات إضافية",
+                                        bold: true,
+                                        size: 28,
+                                        font: "Tajawal"
+                                    })
+                                ],
+                                spacing: { after: 200 }
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `الحالة الصحية: ${data.healthConditions || 'لا توجد'}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `جهة اتصال في حالات الطوارئ: ${data.emergencyContact}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            }),
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `الموافقة على الشروط: ${data.terms}`,
+                                        size: 24,
+                                        font: "Tajawal"
+                                    })
+                                ]
+                            })
+                        ]
+                    }]
+                });
+
+                // Generate and download the Word document
+                const blob = await Packer.toBlob(doc);
+                saveAs(blob, "استمارة_عضوية_السباحة.docx");
+
+                // Show success message with SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم الإرسال بنجاح!',
+                    text: 'تم إنشاء وتنزيل ملف الاستمارة بنجاح.',
+                    confirmButtonText: 'موافق',
+                    confirmButtonColor: '#3498db'
+                });
+            } catch (error) {
+                // Show error message with SweetAlert2
+                Swal.fire({
+                    icon: 'error',
+                    title: 'حدث خطأ!',
+                    text: 'فشل في إنشاء ملف الاستمارة. حاول مرة أخرى.',
+                    confirmButtonText: 'موافق',
+                    confirmButtonColor: '#3498db'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
