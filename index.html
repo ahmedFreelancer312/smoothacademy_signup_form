@@ -133,29 +133,29 @@
             margin-left: 5px;
         }
         .file-input-container {
-            position: relative;
             display: flex;
             align-items: center;
+            gap: 10px;
             flex: 1;
         }
-        .file-input-container i {
-            position: absolute;
-            left: 10px;
+        .file-input-container .icon-button {
+            background-color: var(--input-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .file-input-container .icon-button:hover {
+            background-color: var(--form-bg-color);
+            border-color: var(--primary-color);
+        }
+        .file-input-container .icon-button i {
             color: var(--primary-color);
             font-size: 20px;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .file-input-container i:hover {
-            color: #2980b9;
         }
         .file-input-container input[type="file"] {
-            padding-left: 40px;
-            opacity: 0; /* Hide the file input */
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
+            display: none;
         }
         .file-input-container .file-display {
             flex: 1;
@@ -272,8 +272,13 @@
             .form-group-inline .form-group {
                 min-width: 100%;
             }
-            .file-input-container i {
-                font-size: 18px;
+            .file-input-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .file-input-container .icon-button {
+                padding: 8px;
             }
             .file-input-container .file-display {
                 min-height: 36px;
@@ -319,8 +324,14 @@
             <div class="form-group">
                 <label for="profileImage" data-i18n="profileImage">الصورة الشخصية</label>
                 <div class="file-input-container">
-                    <i class="fas fa-camera" id="cameraIcon"></i>
-                    <input type="file" id="profileImage" name="profileImage" accept="image/*" capture="environment" required>
+                    <div class="icon-button" id="uploadIcon" title="رفع صورة من الملفات">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="icon-button" id="cameraIcon" title="التقاط صورة بالكاميرا">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <input type="file" id="uploadImage" name="profileImage" accept="image/*">
+                    <input type="file" id="cameraImage" name="profileImage" accept="image/*" capture="environment">
                     <div class="file-display" id="fileDisplay">لم يتم اختيار صورة</div>
                 </div>
             </div>
@@ -574,23 +585,36 @@
             languageToggle.textContent = lang === 'ar' ? 'English' : 'العربية';
         }
 
-        // Camera icon click handler
+        // File input handlers
+        const uploadIcon = document.getElementById('uploadIcon');
         const cameraIcon = document.getElementById('cameraIcon');
-        const profileImageInput = document.getElementById('profileImage');
+        const uploadImageInput = document.getElementById('uploadImage');
+        const cameraImageInput = document.getElementById('cameraImage');
         const fileDisplay = document.getElementById('fileDisplay');
 
+        uploadIcon.addEventListener('click', () => {
+            uploadImageInput.click();
+        });
+
         cameraIcon.addEventListener('click', () => {
-            profileImageInput.click();
+            cameraImageInput.click();
         });
 
         // Update file display when an image is selected
-        profileImageInput.addEventListener('change', () => {
-            if (profileImageInput.files && profileImageInput.files[0]) {
-                fileDisplay.textContent = profileImageInput.files[0].name;
+        function handleImageChange() {
+            const selectedFile = this.files && this.files[0];
+            if (selectedFile) {
+                fileDisplay.textContent = selectedFile.name;
+                // Clear the other input to ensure only one file is submitted
+                const otherInput = this === uploadImageInput ? cameraImageInput : uploadImageInput;
+                otherInput.value = '';
             } else {
                 fileDisplay.textContent = translations[currentLanguage].noImageSelected;
             }
-        });
+        }
+
+        uploadImageInput.addEventListener('change', handleImageChange);
+        cameraImageInput.addEventListener('change', handleImageChange);
 
         // Function to convert date from YYYY-MM-DD to DD/MM/YYYY
         function formatDate(dateStr) {
