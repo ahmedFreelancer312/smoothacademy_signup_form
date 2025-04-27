@@ -1,1025 +1,1180 @@
 <!DOCTYPE html>
 <html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>استمارة عضوية نشاط السباحة</title>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --text-color: #34495e;
-            --border-color: #dcdcdc;
-            --background-color: #f0f2f5;
-            --form-bg-color: #ffffff;
-            --input-bg-color: #fafafa;
+      :root {
+        --primary-color: #3498db;
+        --text-color: #34495e;
+        --border-color: #dcdcdc;
+        --background-color: #f0f2f5;
+        --form-bg-color: #ffffff;
+        --input-bg-color: #fafafa;
+      }
+      [data-theme="dark"] {
+        --primary-color: #60a5fa;
+        --text-color: #e5e7eb;
+        --border-color: #4b5563;
+        --background-color: #1f2937;
+        --form-bg-color: #374151;
+        --input-bg-color: #4b5563;
+      }
+      body {
+        font-family: "Tajawal", Arial, sans-serif;
+        direction: rtl;
+        background-color: var(--background-color);
+        margin: 0;
+        padding: 20px;
+        transition: all 0.3s ease;
+        overflow-x: hidden;
+      }
+      .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: var(--form-bg-color);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateY(50px);
+        animation: slideIn 0.8s ease-out forwards;
+      }
+      @keyframes slideIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        [data-theme="dark"] {
-            --primary-color: #60a5fa;
-            --text-color: #e5e7eb;
-            --border-color: #4b5563;
-            --background-color: #1f2937;
-            --form-bg-color: #374151;
-            --input-bg-color: #4b5563;
+      }
+      .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out 0.2s forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
         }
-        body {
-            font-family: 'Tajawal', Arial, sans-serif;
-            direction: rtl;
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 20px;
-            transition: all 0.3s ease;
-            overflow-x: hidden;
+      }
+      .form-header h1 {
+        color: var(--text-color);
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .form-header p {
+        color: #7f8c8d;
+        font-size: 16px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: calc(0.3s + var(--animation-order) * 0.1s);
+      }
+      .form-group:nth-child(1) {
+        --animation-order: 1;
+      }
+      .form-group:nth-child(2) {
+        --animation-order: 2;
+      }
+      .form-group:nth-child(3) {
+        --animation-order: 3;
+      }
+      .form-group:nth-child(4) {
+        --animation-order: 4;
+      }
+      .form-group:nth-child(5) {
+        --animation-order: 5;
+      }
+      .form-group:nth-child(6) {
+        --animation-order: 6;
+      }
+      label {
+        font-weight: bold;
+        color: var(--text-color);
+        flex: 0 0 150px;
+      }
+      input,
+      select,
+      textarea {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 16px;
+        background-color: var(--input-bg-color);
+        color: var(--text-color);
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--primary-color);
+        background-color: var(--form-bg-color);
+        outline: none;
+      }
+      .form-group-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .form-group-inline .form-group {
+        flex: 1;
+        min-width: 250px;
+      }
+      .checkbox-group,
+      .radio-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 5px;
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: calc(0.3s + var(--animation-order) * 0.1s);
+      }
+      .checkbox-group:nth-child(1) {
+        --animation-order: 7;
+      }
+      .radio-group:nth-child(1) {
+        --animation-order: 8;
+      }
+      .checkbox-group label,
+      .radio-group label {
+        font-weight: normal;
+        color: var(--text-color);
+        flex: none;
+        margin-right: 5px;
+      }
+      .checkbox-group input,
+      .radio-group input {
+        margin-left: 5px;
+      }
+      .file-input-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+      .file-input-container .icon-button {
+        background-color: var(--input-bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s;
+      }
+      .file-input-container .icon-button:hover {
+        background-color: var(--form-bg-color);
+        border-color: var(--primary-color);
+      }
+      .file-input-container .icon-button i {
+        color: var(--primary-color);
+        font-size: 20px;
+      }
+      .file-input-container input[type="file"] {
+        display: none;
+      }
+      .file-input-container .file-display {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: var(--input-bg-color);
+        color: var(--text-color);
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+      }
+      /* Camera Modal Styles */
+      .camera-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+      .camera-modal-content {
+        background-color: var(--form-bg-color);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 600px;
+        width: 90%;
+      }
+      .camera-modal-content video {
+        width: 100%;
+        max-height: 400px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+      }
+      .camera-modal-content button {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .camera-modal-content button:hover {
+        background-color: #2980b9;
+      }
+      /* Submit Button Styles */
+      button[type="submit"] {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+        display: block;
+        margin: 30px auto;
+        position: relative;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+      button[type="submit"]:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+      }
+      button[type="submit"]:disabled {
+        background-color: #6b7280;
+        cursor: not-allowed;
+        transform: none;
+      }
+      button[type="submit"] .loader {
+        display: none;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      @keyframes spin {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
         }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+      button[type="submit"].loading .loader {
+        display: block;
+      }
+      button[type="submit"].loading span {
+        opacity: 0;
+      }
+      /* Mode and Language Toggle Button Styles */
+      .mode-toggle,
+      .language-toggle {
+        position: fixed;
+        top: 20px;
+        z-index: 1000;
+        display: flex;
+        gap: 10px;
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out 0.4s forwards;
+      }
+      .mode-toggle {
+        right: 20px;
+      }
+      .language-toggle {
+        left: 20px;
+      }
+      .mode-toggle button,
+      .language-toggle button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+      .mode-toggle button:hover,
+      .language-toggle button:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+      }
+      .mode-toggle button i,
+      .language-toggle button i {
+        font-size: 16px;
+      }
+      /* Form Preview Styles for Image Generation */
+      #formPreview {
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: 600px;
+        background-color: #ffffff;
+        padding: 20px;
+        border: 1px solid #dcdcdc;
+        border-radius: 10px;
+        font-family: "Tajawal", Arial, sans-serif;
+        color: #34495e;
+        box-sizing: border-box;
+      }
+      #formPreview h1 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      #formPreview p {
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #7f8c8d;
+      }
+      #formPreview .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 15px 0 10px;
+      }
+      #formPreview .field {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      #formPreview .field-label {
+        font-weight: bold;
+        flex: 0 0 200px;
+      }
+      #formPreview .field-value {
+        flex: 1;
+        text-align: left;
+      }
+      #formPreview img {
+        display: block;
+        margin: 10px auto;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+      @media (max-width: 600px) {
         .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: var(--form-bg-color);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            opacity: 0;
-            transform: translateY(50px);
-            animation: slideIn 0.8s ease-out forwards;
-        }
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out 0.2s forwards;
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-        .form-header h1 {
-            color: var(--text-color);
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        .form-header p {
-            color: #7f8c8d;
-            font-size: 16px;
+          padding: 15px;
         }
         .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards;
-            animation-delay: calc(0.3s + var(--animation-order) * 0.1s);
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
         }
-        .form-group:nth-child(1) { --animation-order: 1; }
-        .form-group:nth-child(2) { --animation-order: 2; }
-        .form-group:nth-child(3) { --animation-order: 3; }
-        .form-group:nth-child(4) { --animation-order: 4; }
-        .form-group:nth-child(5) { --animation-order: 5; }
-        .form-group:nth-child(6) { --animation-order: 6; }
         label {
-            font-weight: bold;
-            color: var(--text-color);
-            flex: 0 0 150px;
+          flex: none;
+          margin-bottom: 8px;
         }
-        input, select, textarea {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-            background-color: var(--input-bg-color);
-            color: var(--text-color);
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary-color);
-            background-color: var(--form-bg-color);
-            outline: none;
-        }
-        .form-group-inline {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+        input,
+        select,
+        textarea {
+          width: 100%;
         }
         .form-group-inline .form-group {
-            flex: 1;
-            min-width: 250px;
-        }
-        .checkbox-group, .radio-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 5px;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards;
-            animation-delay: calc(0.3s + var(--animation-order) * 0.1s);
-        }
-        .checkbox-group:nth-child(1) { --animation-order: 7; }
-        .radio-group:nth-child(1) { --animation-order: 8; }
-        .checkbox-group label, .radio-group label {
-            font-weight: normal;
-            color: var(--text-color);
-            flex: none;
-            margin-right: 5px;
-        }
-        .checkbox-group input, .radio-group input {
-            margin-left: 5px;
+          min-width: 100%;
         }
         .file-input-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
         }
         .file-input-container .icon-button {
-            background-color: var(--input-bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .file-input-container .icon-button:hover {
-            background-color: var(--form-bg-color);
-            border-color: var(--primary-color);
-        }
-        .file-input-container .icon-button i {
-            color: var(--primary-color);
-            font-size: 20px;
-        }
-        .file-input-container input[type="file"] {
-            display: none;
+          padding: 8px;
         }
         .file-input-container .file-display {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background-color: var(--input-bg-color);
-            color: var(--text-color);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            min-height: 40px;
+          min-height: 36px;
         }
-        /* Camera Modal Styles */
-        .camera-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+        .mode-toggle,
+        .language-toggle {
+          top: 10px;
         }
-        .camera-modal-content {
-            background-color: var(--form-bg-color);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
+        .mode-toggle button,
+        .language-toggle button {
+          padding: 8px 12px;
+          font-size: 12px;
+        }
+        .mode-toggle button i,
+        .language-toggle button i {
+          font-size: 14px;
         }
         .camera-modal-content video {
-            width: 100%;
-            max-height: 400px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+          max-height: 300px;
         }
-        .camera-modal-content button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .camera-modal-content button:hover {
-            background-color: #2980b9;
-        }
-        /* Submit Button Styles */
         button[type="submit"] {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 14px 30px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 18px;
-            display: block;
-            margin: 30px auto;
-            position: relative;
-            transition: background-color 0.3s, transform 0.2s;
+          padding: 12px 20px;
+          font-size: 16px;
         }
-        button[type="submit"]:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
+        #formPreview {
+          width: 100%;
+          padding: 15px;
         }
-        button[type="submit"]:disabled {
-            background-color: #6b7280;
-            cursor: not-allowed;
-            transform: none;
+        #formPreview .field {
+          flex-direction: column;
+          gap: 5px;
         }
-        button[type="submit"] .loader {
-            display: none;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+        #formPreview .field-label,
+        #formPreview .field-value {
+          flex: none;
+          text-align: right;
         }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        button[type="submit"].loading .loader {
-            display: block;
-        }
-        button[type="submit"].loading span {
-            opacity: 0;
-        }
-        /* Mode and Language Toggle Button Styles */
-        .mode-toggle, .language-toggle {
-            position: fixed;
-            top: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out 0.4s forwards;
-        }
-        .mode-toggle {
-            right: 20px;
-        }
-        .language-toggle {
-            left: 20px;
-        }
-        .mode-toggle button, .language-toggle button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .mode-toggle button:hover, .language-toggle button:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
-        }
-        .mode-toggle button i, .language-toggle button i {
-            font-size: 16px;
-        }
-        @media (max-width: 600px) {
-            .form-container {
-                padding: 15px;
-            }
-            .form-group {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            label {
-                flex: none;
-                margin-bottom: 8px;
-            }
-            input, select, textarea {
-                width: 100%;
-            }
-            .form-group-inline .form-group {
-                min-width: 100%;
-            }
-            .file-input-container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .file-input-container .icon-button {
-                padding: 8px;
-            }
-            .file-input-container .file-display {
-                min-height: 36px;
-            }
-            .mode-toggle, .language-toggle {
-                top: 10px;
-            }
-            .mode-toggle button, .language-toggle button {
-                padding: 8px 12px;
-                font-size: 12px;
-            }
-            .mode-toggle button i, .language-toggle button i {
-                font-size: 14px;
-            }
-            .camera-modal-content video {
-                max-height: 300px;
-            }
-            button[type="submit"] {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-        }
+      }
     </style>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- docx.js for Word document generation -->
-    <script src="https://unpkg.com/docx@7.8.0/build/index.js"></script>
-    <!-- FileSaver.js for downloading the file -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-</head>
-<body>
+    <!-- html2canvas for image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <body>
     <div class="mode-toggle">
-        <button id="themeToggle"><i class="fas fa-moon"></i> الوضع الداكن</button>
+      <button id="themeToggle"><i class="fas fa-moon"></i> الوضع الداكن</button>
     </div>
     <div class="language-toggle">
-        <button id="languageToggle"><i class="fas fa-globe"></i> English</button>
+      <button id="languageToggle"><i class="fas fa-globe"></i> English</button>
     </div>
     <div class="form-container">
-        <div class="form-header">
-            <h1 data-i18n="formTitle">استمارة عضوية نشاط السباحة</h1>
-            <p data-i18n="formSubtitle">شركة كروس آند سموث - التسجيل للموسم 2025</p>
+      <div class="form-header">
+        <h1 data-i18n="formTitle">استمارة عضوية نشاط السباحة</h1>
+        <p data-i18n="formSubtitle">شركة كروس آند سموث - التسجيل للموسم 2025</p>
+      </div>
+      <form id="membershipForm">
+        <div class="section-title" data-i18n="personalInfo">
+          المعلومات الشخصية
         </div>
-        <form id="membershipForm">
-            <div class="section-title" data-i18n="personalInfo">المعلومات الشخصية</div>
-            <div class="form-group">
-                <label for="fullName" data-i18n="fullName">الاسم الكامل (رباعي)</label>
-                <input type="text" id="fullName" name="fullName" placeholder="أدخل الاسم الكامل" required>
+        <div class="form-group">
+          <label for="fullName" data-i18n="fullName"
+            >الاسم الكامل (رباعي)</label
+          >
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="أدخل الاسم الكامل"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="profileImage" data-i18n="profileImage"
+            >الصورة الشخصية</label
+          >
+          <div class="file-input-container">
+            <div
+              class="icon-button"
+              id="uploadIcon"
+              title="رفع صورة من الملفات"
+            >
+              <i class="fas fa-upload"></i>
             </div>
-            <div class="form-group">
-                <label for="profileImage" data-i18n="profileImage">الصورة الشخصية</label>
-                <div class="file-input-container">
-                    <div class="icon-button" id="uploadIcon" title="رفع صورة من الملفات">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <div class="icon-button" id="cameraIcon" title="التقاط صورة بالكاميرا">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                    <input type="file" id="uploadImage" name="profileImage" accept="image/*">
-                    <input type="file" id="cameraImage" name="profileImage" accept="image/*" capture="environment">
-                    <div class="file-display" id="fileDisplay">لم يتم اختيار صورة</div>
-                </div>
+            <div
+              class="icon-button"
+              id="cameraIcon"
+              title="التقاط صورة بالكاميرا"
+            >
+              <i class="fas fa-camera"></i>
             </div>
-            <div class="form-group-inline">
-                <div class="form-group">
-                    <label for="nationalId" data-i18n="nationalId">رقم الهوية الوطنية</label>
-                    <input type="text" id="nationalId" name="nationalId" placeholder="أدخل رقم الهوية" required>
-                </div>
-                <div class="form-group">
-                    <label for="dateOfBirth" data-i18n="dateOfBirth">تاريخ الميلاد</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth" required>
-                </div>
-            </div>
-            <div class="form-group-inline">
-                <div class="form-group">
-                    <label for="phone" data-i18n="phone">رقم الهاتف</label>
-                    <input type="tel" id="phone" name="phone" placeholder="أدخل رقم الهاتف" pattern="[0-9]{11}" title="يرجى إدخال رقم هاتف مكون من 11 رقمًا" required>
-                </div>
-                <div class="form-group">
-                    <label for="email" data-i18n="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" name="email" placeholder="أدخل البريد الإلكتروني">
-                </div>
-            </div>
-            <div class="radio-group">
-                <label data-i18n="gender">الجنس</label>
-                <input type="radio" id="male" name="gender" value="male" required>
-                <label for="male" data-i18n="male">ذكر</label>
-                <input type="radio" id="female" name="gender" value="female">
-                <label for="female" data-i18n="female">أنثى</label>
-            </div>
+            <input
+              type="file"
+              id="uploadImage"
+              name="profileImage"
+              accept="image/*"
+            />
+            <input
+              type="file"
+              id="cameraImage"
+              name="profileImage"
+              accept="image/*"
+              capture="environment"
+            />
+            <div class="file-display" id="fileDisplay">لم يتم اختيار صورة</div>
+          </div>
+        </div>
+        <div class="form-group-inline">
+          <div class="form-group">
+            <label for="nationalId" data-i18n="nationalId">رقم البطاقه </label>
+            <input
+              type="text"
+              id="nationalId"
+              name="nationalId"
+              placeholder="أدخل رقم البطاقه"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="dateOfBirth" data-i18n="dateOfBirth"
+              >تاريخ الميلاد</label
+            >
+            <input type="date" id="dateOfBirth" name="dateOfBirth" required />
+          </div>
+        </div>
+        <div class="form-group-inline">
+          <div class="form-group">
+            <label for="phone" data-i18n="phone">رقم الهاتف</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="أدخل رقم الهاتف"
+              pattern="[0-9]{11}"
+              title="يرجى إدخال رقم هاتف مكون من 11 رقمًا"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email" data-i18n="email">البريد الإلكتروني</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="أدخل البريد الإلكتروني"
+            />
+          </div>
+        </div>
+        <div class="radio-group">
+          <label data-i18n="gender">الجنس</label>
+          <input type="radio" id="male" name="gender" value="male" required />
+          <label for="male" data-i18n="male">ذكر</label>
+          <input type="radio" id="female" name="gender" value="female" />
+          <label for="female" data-i18n="female">أنثى</label>
+        </div>
 
-            <div class="section-title" data-i18n="membershipDetails">تفاصيل العضوية</div>
-            <div class="form-group">
-                <label for="membershipType" data-i18n="membershipType">نوع العضوية</label>
-                <select id="membershipType" name="membershipType" required>
-                    <option value="" data-i18n="selectMembership">اختر نوع العضوية</option>
-                    <option value="monthly" data-i18n="monthly">شهري</option>
-                    <option value="quarterly" data-i18n="quarterly">ربع سنوي</option>
-                    <option value="annual" data-i18n="annual">سنوي</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="swimmingLevel" data-i18n="swimmingLevel">المستوى في السباحة</label>
-                <select id="swimmingLevel" name="swimmingLevel" required>
-                    <option value="" data-i18n="selectLevel">اختر المستوى</option>
-                    <option value="beginner" data-i18n="beginner">مبتدئ</option>
-                    <option value="intermediate" data-i18n="intermediate">متوسط</option>
-                    <option value="advanced" data-i18n="advanced">متقدم</option>
-                </select>
-            </div>
-            <div class="checkbox-group">
-                <label data-i18n="trainingDays">الأيام المفضلة للتدريب</label>
-                <input type="checkbox" id="sunday" name="trainingDays" value="sunday">
-                <label for="sunday" data-i18n="sunday">الأحد</label>
-                <input type="checkbox" id="monday" name="trainingDays" value="monday">
-                <label for="monday" data-i18n="monday">الإثنين</label>
-                <input type="checkbox" id="tuesday" name="trainingDays" value="tuesday">
-                <label for="tuesday" data-i18n="tuesday">الثلاثاء</label>
-                <input type="checkbox" id="wednesday" name="trainingDays" value="wednesday">
-                <label for="wednesday" data-i18n="wednesday">الأربعاء</label>
-                <input type="checkbox" id="thursday" name="trainingDays" value="thursday">
-                <label for="thursday" data-i18n="thursday">الخميس</label>
-            </div>
+        <div class="section-title" data-i18n="membershipDetails">
+          تفاصيل العضوية
+        </div>
+        <div class="form-group">
+          <label for="membershipType" data-i18n="membershipType"
+            >نوع العضوية</label
+          >
+          <select id="membershipType" name="membershipType" required>
+            <option value="" data-i18n="selectMembership">
+              اختر نوع العضوية
+            </option>
+            <option value="monthly" data-i18n="monthly">شهري</option>
+            <option value="quarterly" data-i18n="quarterly">ربع سنوي</option>
+            <option value="annual" data-i18n="annual">سنوي</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="swimmingLevel" data-i18n="swimmingLevel"
+            >المستوى في السباحة</label
+          >
+          <select id="swimmingLevel" name="swimmingLevel" required>
+            <option value="" data-i18n="selectLevel">اختر المستوى</option>
+            <option value="beginner" data-i18n="beginner">مبتدئ</option>
+            <option value="intermediate" data-i18n="intermediate">متوسط</option>
+            <option value="advanced" data-i18n="advanced">متقدم</option>
+          </select>
+        </div>
+        <div class="checkbox-group">
+          <label data-i18n="trainingDays">الأيام المفضلة للتدريب</label>
+          <input
+            type="checkbox"
+            id="sunday"
+            name="trainingDays"
+            value="sunday"
+          />
+          <label for="sunday" data-i18n="sunday">الأحد</label>
+          <input
+            type="checkbox"
+            id="monday"
+            name="trainingDays"
+            value="monday"
+          />
+          <label for="monday" data-i18n="monday">الإثنين</label>
+          <input
+            type="checkbox"
+            id="tuesday"
+            name="trainingDays"
+            value="tuesday"
+          />
+          <label for="tuesday" data-i18n="tuesday">الثلاثاء</label>
+          <input
+            type="checkbox"
+            id="wednesday"
+            name="trainingDays"
+            value="wednesday"
+          />
+          <label for="wednesday" data-i18n="wednesday">الأربعاء</label>
+          <input
+            type="checkbox"
+            id="thursday"
+            name="trainingDays"
+            value="thursday"
+          />
+          <label for="thursday" data-i18n="thursday">الخميس</label>
+        </div>
 
-            <div class="section-title" data-i18n="additionalInfo">معلومات إضافية</div>
-            <div class="form-group">
-                <label for="healthConditions" data-i18n="healthConditions">الحالة الصحية (إن وجدت)</label>
-                <textarea id="healthConditions" name="healthConditions" rows="4" placeholder="يرجى ذكر أي حالات صحية أو حساسية"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="emergencyContact" data-i18n="emergencyContact">جهة اتصال في حالات الطوارئ</label>
-                <input type="text" id="emergencyContact" name="emergencyContact" placeholder="الاسم ورقم الهاتف" required>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="terms" name="terms" required>
-                <label for="terms" data-i18n="terms">أوافق على شروط وأحكام العضوية</label>
-            </div>
+        <div class="section-title" data-i18n="additionalInfo">
+          معلومات إضافية
+        </div>
+        <div class="form-group">
+          <label for="healthConditions" data-i18n="healthConditions"
+            >الحالة الصحية (إن وجدت)</label
+          >
+          <textarea
+            id="healthConditions"
+            name="healthConditions"
+            rows="4"
+            placeholder="يرجى ذكر أي حالات صحية أو حساسية"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="emergencyContact" data-i18n="emergencyContact"
+            >جهة اتصال في حالات الطوارئ</label
+          >
+          <input
+            type="text"
+            id="emergencyContact"
+            name="emergencyContact"
+            placeholder="الاسم ورقم الهاتف"
+            required
+          />
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms" name="terms" required />
+          <label for="terms" data-i18n="terms"
+            >أوافق على شروط وأحكام العضوية</label
+          >
+        </div>
 
-            <button type="submit" data-i18n="submit"><span>إرسال الاستمارة</span><div class="loader"></div></button>
-        </form>
+        <button type="submit" data-i18n="submit">
+          <span>إرسال الاستمارة</span>
+          <div class="loader"></div>
+        </button>
+      </form>
     </div>
 
     <!-- Camera Modal -->
     <div class="camera-modal" id="cameraModal">
-        <div class="camera-modal-content">
-            <video id="cameraStream" autoplay></video>
-            <button id="captureButton" data-i18n="capture">التقاط الصورة</button>
-            <button id="closeCameraButton" data-i18n="close">إغلاق</button>
-        </div>
+      <div class="camera-modal-content">
+        <video id="cameraStream" autoplay></video>
+        <button id="captureButton" data-i18n="capture">التقاط الصورة</button>
+        <button id="closeCameraButton" data-i18n="close">إغلاق</button>
+      </div>
+    </div>
+
+    <!-- Form Preview for Image Generation -->
+    <div id="formPreview">
+      <h1 data-i18n="formTitle"></h1>
+      <p data-i18n="formSubtitle"></p>
+      <div class="section-title" data-i18n="personalInfo"></div>
+      <div class="field">
+        <span class="field-label" data-i18n="fullName"></span
+        ><span class="field-value" id="previewFullName"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="nationalId"></span
+        ><span class="field-value" id="previewNationalId"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="dateOfBirth"></span
+        ><span class="field-value" id="previewDateOfBirth"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="phone"></span
+        ><span class="field-value" id="previewPhone"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="email"></span
+        ><span class="field-value" id="previewEmail"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="gender"></span
+        ><span class="field-value" id="previewGender"></span>
+      </div>
+      <img id="previewImage" style="display: none" />
+      <div class="section-title" data-i18n="membershipDetails"></div>
+      <div class="field">
+        <span class="field-label" data-i18n="membershipType"></span
+        ><span class="field-value" id="previewMembershipType"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="swimmingLevel"></span
+        ><span class="field-value" id="previewSwimmingLevel"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="trainingDays"></span
+        ><span class="field-value" id="previewTrainingDays"></span>
+      </div>
+      <div class="section-title" data-i18n="additionalInfo"></div>
+      <div class="field">
+        <span class="field-label" data-i18n="healthConditions"></span
+        ><span class="field-value" id="previewHealthConditions"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="emergencyContact"></span
+        ><span class="field-value" id="previewEmergencyContact"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="terms"></span
+        ><span class="field-value" id="previewTerms"></span>
+      </div>
     </div>
 
     <script>
-        // Language translations
-        const translations = {
-            ar: {
-                formTitle: "استمارة عضوية نشاط السباحة",
-                formSubtitle: "شركة كروس آند سموث - التسجيل للموسم 2025",
-                personalInfo: "المعلومات الشخصية",
-                fullName: "الاسم الكامل (رباعي)",
-                profileImage: "الصورة الشخصية",
-                nationalId: "رقم الهوية الوطنية",
-                dateOfBirth: "تاريخ الميلاد",
-                phone: "رقم الهاتف",
-                email: "البريد الإلكتروني",
-                gender: "الجنس",
-                male: "ذكر",
-                female: "أنثى",
-                membershipDetails: "تفاصيل العضوية",
-                membershipType: "نوع العضوية",
-                selectMembership: "اختر نوع العضوية",
-                monthly: "شهري",
-                quarterly: "ربع سنوي",
-                annual: "سنوي",
-                swimmingLevel: "المستوى في السباحة",
-                selectLevel: "اختر المستوى",
-                beginner: "مبتدئ",
-                intermediate: "متوسط",
-                advanced: "متقدم",
-                trainingDays: "الأيام المفضلة للتدريب",
-                sunday: "الأحد",
-                monday: "الإثنين",
-                tuesday: "الثلاثاء",
-                wednesday: "الأربعاء",
-                thursday: "الخميس",
-                additionalInfo: "معلومات إضافية",
-                healthConditions: "الحالة الصحية (إن وجدت)",
-                emergencyContact: "جهة اتصال في حالات الطوارئ",
-                terms: "أوافق على شروط وأحكام العضوية",
-                submit: "إرسال الاستمارة",
-                successTitle: "تم الإرسال بنجاح!",
-                successText: "تم إنشاء وتنزيل ملف الاستمارة بنجاح.",
-                errorTitle: "حدث خطأ!",
-                errorText: "فشل في إنشاء ملف الاستمارة. حاول مرة أخرى.",
-                agreed: "موافق",
-                notAgreed: "غير موافق",
-                notProvided: "غير مدخل",
-                noneSelected: "لم يتم اختيار أيام",
-                none: "لا توجد",
-                ok: "موافق",
-                noImageSelected: "لم يتم اختيار صورة",
-                capture: "التقاط الصورة",
-                close: "إغلاق",
-                cameraError: "فشل في الوصول إلى الكاميرا. تأكد من منح الأذونات أو حاول رفع صورة من الملفات."
-            },
-            en: {
-                formTitle: "Swimming Activity Membership Form",
-                formSubtitle: "Cross & Smooth Company - Registration for 2025 Season",
-                personalInfo: "Personal Information",
-                fullName: "Full Name (Quadruple)",
-                profileImage: "Profile Picture",
-                nationalId: "National ID Number",
-                dateOfBirth: "Date of Birth",
-                phone: "Phone Number",
-                email: "Email Address",
-                gender: "Gender",
-                male: "Male",
-                female: "Female",
-                membershipDetails: "Membership Details",
-                membershipType: "Membership Type",
-                selectMembership: "Select Membership Type",
-                monthly: "Monthly",
-                quarterly: "Quarterly",
-                annual: "Annual",
-                swimmingLevel: "Swimming Level",
-                selectLevel: "Select Level",
-                beginner: "Beginner",
-                intermediate: "Intermediate",
-                advanced: "Advanced",
-                trainingDays: "Preferred Training Days",
-                sunday: "Sunday",
-                monday: "Monday",
-                tuesday: "Tuesday",
-                wednesday: "Wednesday",
-                thursday: "Thursday",
-                additionalInfo: "Additional Information",
-                healthConditions: "Health Conditions (if any)",
-                emergencyContact: "Emergency Contact",
-                terms: "I agree to the membership terms and conditions",
-                submit: "Submit Form",
-                successTitle: "Submitted Successfully!",
-                successText: "The form file has been created and downloaded successfully.",
-                errorTitle: "An Error Occurred!",
-                errorText: "Failed to create the form file. Please try again.",
-                agreed: "Agreed",
-                notAgreed: "Not Agreed",
-                notProvided: "Not Provided",
-                noneSelected: "No days selected",
-                none: "None",
-                ok: "OK",
-                noImageSelected: "No image selected",
-                capture: "Capture Photo",
-                close: "Close",
-                cameraError: "Failed to access the camera. Please ensure permissions are granted or try uploading an image from files."
-            }
-        };
+      // Language translations
+      const translations = {
+        ar: {
+          formTitle: "استمارة عضوية نشاط السباحة",
+          formSubtitle: "شركة كروس آند سموث - التسجيل للموسم 2025",
+          personalInfo: "المعلومات الشخصية",
+          fullName: "الاسم الكامل (رباعي)",
+          profileImage: "الصورة الشخصية",
+          nationalId: "رقم البطاقه",
+          dateOfBirth: "تاريخ الميلاد",
+          phone: "رقم الهاتف",
+          email: "البريد الإلكتروني",
+          gender: "الجنس",
+          male: "ذكر",
+          female: "أنثى",
+          membershipDetails: "تفاصيل العضوية",
+          membershipType: "نوع العضوية",
+          selectMembership: "اختر نوع العضوية",
+          monthly: "شهري",
+          quarterly: "ربع سنوي",
+          annual: "سنوي",
+          swimmingLevel: "المستوى في السباحة",
+          selectLevel: "اختر المستوى",
+          beginner: "مبتدئ",
+          intermediate: "متوسط",
+          advanced: "متقدم",
+          trainingDays: "الأيام المفضلة للتدريب",
+          sunday: "الأحد",
+          monday: "الإثنين",
+          tuesday: "الثلاثاء",
+          wednesday: "الأربعاء",
+          thursday: "الخميس",
+          additionalInfo: "معلومات إضافية",
+          healthConditions: "الحالة الصحية (إن وجدت)",
+          emergencyContact: "جهة اتصال في حالات الطوارئ",
+          terms: "أوافق على شروط وأحكام العضوية",
+          submit: "إرسال الاستمارة",
+          successTitle: "تم الإرسال بنجاح!",
+          successText: "تم إنشاء وتنزيل صورة الاستمارة بنجاح.",
+          errorTitle: "حدث خطأ!",
+          errorText: "فشل في إنشاء صورة الاستمارة. حاول مرة أخرى.",
+          agreed: "موافق",
+          notAgreed: "غير موافق",
+          notProvided: "غير مدخل",
+          noneSelected: "لم يتم اختيار أيام",
+          none: "لا توجد",
+          ok: "موافق",
+          noImageSelected: "لم يتم اختيار صورة",
+          capture: "التقاط الصورة",
+          close: "إغلاق",
+          cameraError:
+            "فشل في الوصول إلى الكاميرا. تأكد من منح الأذونات أو حاول رفع صورة من الملفات.",
+        },
+        en: {
+          formTitle: "Swimming Activity Membership Form",
+          formSubtitle: "Cross & Smooth Company - Registration for 2025 Season",
+          personalInfo: "Personal Information",
+          fullName: "Full Name (Quadruple)",
+          profileImage: "Profile Picture",
+          nationalId: "National ID Number",
+          dateOfBirth: "Date of Birth",
+          phone: "Phone Number",
+          email: "Email Address",
+          gender: "Gender",
+          male: "Male",
+          female: "Female",
+          membershipDetails: "Membership Details",
+          membershipType: "Membership Type",
+          selectMembership: "Select Membership Type",
+          monthly: "Monthly",
+          quarterly: "Quarterly",
+          annual: "Annual",
+          swimmingLevel: "Swimming Level",
+          selectLevel: "Select Level",
+          beginner: "Beginner",
+          intermediate: "Intermediate",
+          advanced: "Advanced",
+          trainingDays: "Preferred Training Days",
+          sunday: "Sunday",
+          monday: "Monday",
+          tuesday: "Tuesday",
+          wednesday: "Wednesday",
+          thursday: "Thursday",
+          additionalInfo: "Additional Information",
+          healthConditions: "Health Conditions (if any)",
+          emergencyContact: "Emergency Contact",
+          terms: "I agree to the membership terms and conditions",
+          submit: "Submit Form",
+          successTitle: "Submitted Successfully!",
+          successText:
+            "The form image has been created and downloaded successfully.",
+          errorTitle: "An Error Occurred!",
+          errorText: "Failed to create the form image. Please try again.",
+          agreed: "Agreed",
+          notAgreed: "Not Agreed",
+          notProvided: "Not Provided",
+          noneSelected: "No days selected",
+          none: "None",
+          ok: "OK",
+          noImageSelected: "No image selected",
+          capture: "Capture Photo",
+          close: "Close",
+          cameraError:
+            "Failed to access the camera. Please ensure permissions are granted or try uploading an image from files.",
+        },
+      };
 
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        body.setAttribute('data-theme', savedTheme);
-        updateThemeButton(savedTheme);
+      // Theme toggle
+      const themeToggle = document.getElementById("themeToggle");
+      const body = document.body;
+      const savedTheme = localStorage.getItem("theme") || "light";
+      body.setAttribute("data-theme", savedTheme);
+      updateThemeButton(savedTheme);
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            updateThemeButton(currentTheme);
-        });
+      themeToggle.addEventListener("click", () => {
+        const currentTheme =
+          body.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        body.setAttribute("data-theme", currentTheme);
+        localStorage.setItem("theme", currentTheme);
+        updateThemeButton(currentTheme);
+      });
 
-        function updateThemeButton(theme) {
-            themeToggle.innerHTML = theme === 'dark'
-                ? '<i class="fas fa-sun"></i> الوضع الفاتح'
-                : '<i class="fas fa-moon"></i> الوضع الداكن';
-        }
+      function updateThemeButton(theme) {
+        themeToggle.innerHTML =
+          theme === "dark"
+            ? '<i class="fas fa-sun"></i> الوضع الفاتح'
+            : '<i class="fas fa-moon"></i> الوضع الداكن';
+      }
 
-        // Language toggle
-        const languageToggle = document.getElementById('languageToggle');
-        let currentLanguage = localStorage.getItem('language') || 'ar';
-        document.documentElement.lang = currentLanguage === 'ar' ? 'ar' : 'en';
-        document.body.style.direction = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+      // Language toggle
+      const languageToggle = document.getElementById("languageToggle");
+      let currentLanguage = localStorage.getItem("language") || "ar";
+      document.documentElement.lang = currentLanguage === "ar" ? "ar" : "en";
+      document.body.style.direction = currentLanguage === "ar" ? "rtl" : "ltr";
+      updateLanguage(currentLanguage);
+      updateLanguageButton(currentLanguage);
+
+      languageToggle.addEventListener("click", () => {
+        currentLanguage = currentLanguage === "ar" ? "en" : "ar";
+        localStorage.setItem("language", currentLanguage);
+        document.documentElement.lang = currentLanguage === "ar" ? "ar" : "en";
+        document.body.style.direction =
+          currentLanguage === "ar" ? "rtl" : "ltr";
         updateLanguage(currentLanguage);
         updateLanguageButton(currentLanguage);
+      });
 
-        languageToggle.addEventListener('click', () => {
-            currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
-            localStorage.setItem('language', currentLanguage);
-            document.documentElement.lang = currentLanguage === 'ar' ? 'ar' : 'en';
-            document.body.style.direction = currentLanguage === 'ar' ? 'rtl' : 'ltr';
-            updateLanguage(currentLanguage);
-            updateLanguageButton(currentLanguage);
+      function updateLanguage(lang) {
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.getAttribute("data-i18n");
+          if (element.tagName === "BUTTON") {
+            if (element.querySelector("span")) {
+              element.querySelector("span").textContent =
+                translations[lang][key];
+            } else {
+              element.textContent = translations[lang][key];
+            }
+          } else {
+            element.textContent = translations[lang][key];
+          }
+          if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+            element.placeholder = translations[lang][key];
+          }
         });
-
-        function updateLanguage(lang) {
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (element.tagName === 'BUTTON') {
-                    if (element.querySelector('span')) {
-                        element.querySelector('span').textContent = translations[lang][key];
-                    } else {
-                        element.textContent = translations[lang][key];
-                    }
-                } else {
-                    element.textContent = translations[lang][key];
-                }
-                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = translations[lang][key];
-                }
-            });
-            // Update select options dynamically
-            const membershipType = document.getElementById('membershipType');
-            membershipType.innerHTML = `
+        // Update select options dynamically
+        const membershipType = document.getElementById("membershipType");
+        membershipType.innerHTML = `
                 <option value="" data-i18n="selectMembership">${translations[lang].selectMembership}</option>
                 <option value="monthly" data-i18n="monthly">${translations[lang].monthly}</option>
                 <option value="quarterly" data-i18n="quarterly">${translations[lang].quarterly}</option>
                 <option value="annual" data-i18n="annual">${translations[lang].annual}</option>
             `;
-            const swimmingLevel = document.getElementById('swimmingLevel');
-            swimmingLevel.innerHTML = `
+        const swimmingLevel = document.getElementById("swimmingLevel");
+        swimmingLevel.innerHTML = `
                 <option value="" data-i18n="selectLevel">${translations[lang].selectLevel}</option>
                 <option value="beginner" data-i18n="beginner">${translations[lang].beginner}</option>
                 <option value="intermediate" data-i18n="intermediate">${translations[lang].intermediate}</option>
                 <option value="advanced" data-i18n="advanced">${translations[lang].advanced}</option>
             `;
-            // Update file display text
-            const fileDisplay = document.getElementById('fileDisplay');
-            fileDisplay.textContent = translations[lang].noImageSelected;
+        // Update file display text
+        const fileDisplay = document.getElementById("fileDisplay");
+        fileDisplay.textContent = translations[lang].noImageSelected;
+      }
+
+      function updateLanguageButton(lang) {
+        languageToggle.innerHTML =
+          lang === "ar"
+            ? '<i class="fas fa-globe"></i> English'
+            : '<i class="fas fa-globe"></i> العربية';
+      }
+
+      // File and Camera input handlers
+      const uploadIcon = document.getElementById("uploadIcon");
+      const cameraIcon = document.getElementById("cameraIcon");
+      const uploadImageInput = document.getElementById("uploadImage");
+      const cameraImageInput = document.getElementById("cameraImage");
+      const fileDisplay = document.getElementById("fileDisplay");
+      const cameraModal = document.getElementById("cameraModal");
+      const cameraStream = document.getElementById("cameraStream");
+      const captureButton = document.getElementById("captureButton");
+      const closeCameraButton = document.getElementById("closeCameraButton");
+      let stream = null;
+      let capturedFile = null;
+
+      // Handle file upload
+      uploadIcon.addEventListener("click", () => {
+        uploadImageInput.click();
+      });
+
+      // Handle camera activation
+      cameraIcon.addEventListener("click", async () => {
+        // Check if WebRTC is supported
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          Swal.fire({
+            icon: "error",
+            title: translations[currentLanguage].errorTitle,
+            text: translations[currentLanguage].cameraError,
+            confirmButtonText: translations[currentLanguage].ok,
+            confirmButtonColor: "#3498db",
+          });
+          cameraImageInput.click(); // Fallback to default input
+          return;
         }
 
-        function updateLanguageButton(lang) {
-            languageToggle.innerHTML = lang === 'ar'
-                ? '<i class="fas fa-globe"></i> English'
-                : '<i class="fas fa-globe"></i> العربية';
+        try {
+          // Request camera access
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          cameraStream.srcObject = stream;
+          cameraModal.style.display = "flex";
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: translations[currentLanguage].errorTitle,
+            text: translations[currentLanguage].cameraError,
+            confirmButtonText: translations[currentLanguage].ok,
+            confirmButtonColor: "#3498db",
+          });
+          cameraImageInput.click(); // Fallback to default input
         }
+      });
 
-        // File and Camera input handlers
-        const uploadIcon = document.getElementById('uploadIcon');
-        const cameraIcon = document.getElementById('cameraIcon');
-        const uploadImageInput = document.getElementById('uploadImage');
-        const cameraImageInput = document.getElementById('cameraImage');
-        const fileDisplay = document.getElementById('fileDisplay');
-        const cameraModal = document.getElementById('cameraModal');
-        const cameraStream = document.getElementById('cameraStream');
-        const captureButton = document.getElementById('captureButton');
-        const closeCameraButton = document.getElementById('closeCameraButton');
-        let stream = null;
-        let capturedFile = null;
+      // Capture photo from camera
+      captureButton.addEventListener("click", () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = cameraStream.videoWidth;
+        canvas.height = cameraStream.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
 
-        // Handle file upload
-        uploadIcon.addEventListener('click', () => {
-            uploadImageInput.click();
-        });
+        // Convert canvas to blob
+        canvas.toBlob((blob) => {
+          capturedFile = new File([blob], `captured_photo_${Date.now()}.jpg`, {
+            type: "image/jpeg",
+          });
+          fileDisplay.textContent = capturedFile.name;
+          uploadImageInput.value = ""; // Clear upload input
+          cameraImageInput.value = ""; // Clear camera input
+          closeCamera();
+        }, "image/jpeg");
+      });
 
-        // Handle camera activation
-        cameraIcon.addEventListener('click', async () => {
-            // Check if WebRTC is supported
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                Swal.fire({
-                    icon: 'error',
-                    title: translations[currentLanguage].errorTitle,
-                    text: translations[currentLanguage].cameraError,
-                    confirmButtonText: translations[currentLanguage].ok,
-                    confirmButtonColor: '#3498db'
-                });
-                cameraImageInput.click(); // Fallback to default input
-                return;
-            }
+      // Close camera modal
+      closeCameraButton.addEventListener("click", () => {
+        closeCamera();
+      });
 
-            try {
-                // Request camera access
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                cameraStream.srcObject = stream;
-                cameraModal.style.display = 'flex';
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: translations[currentLanguage].errorTitle,
-                    text: translations[currentLanguage].cameraError,
-                    confirmButtonText: translations[currentLanguage].ok,
-                    confirmButtonColor: '#3498db'
-                });
-                cameraImageInput.click(); // Fallback to default input
-            }
-        });
-
-        // Capture photo from camera
-        captureButton.addEventListener('click', () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = cameraStream.videoWidth;
-            canvas.height = cameraStream.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
-
-            // Convert canvas to blob
-            canvas.toBlob(blob => {
-                capturedFile = new File([blob], `captured_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
-                fileDisplay.textContent = capturedFile.name;
-                uploadImageInput.value = ''; // Clear upload input
-                cameraImageInput.value = ''; // Clear camera input
-                closeCamera();
-            }, 'image/jpeg');
-        });
-
-        // Close camera modal
-        closeCameraButton.addEventListener('click', () => {
-            closeCamera();
-        });
-
-        function closeCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                cameraStream.srcObject = null;
-                stream = null;
-            }
-            cameraModal.style.display = 'none';
+      function closeCamera() {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          cameraStream.srcObject = null;
+          stream = null;
         }
+        cameraModal.style.display = "none";
+      }
 
-        // Update file display when an image is selected
-        function handleImageChange() {
-            const selectedFile = this.files && this.files[0];
-            if (selectedFile) {
-                fileDisplay.textContent = selectedFile.name;
-                capturedFile = null; // Clear captured file
-                // Clear the other input
-                const otherInput = this === uploadImageInput ? cameraImageInput : uploadImageInput;
-                otherInput.value = '';
+      // Update file display when an image is selected
+      function handleImageChange() {
+        const selectedFile = this.files && this.files[0];
+        if (selectedFile) {
+          fileDisplay.textContent = selectedFile.name;
+          capturedFile = null; // Clear captured file
+          // Clear the other input
+          const otherInput =
+            this === uploadImageInput ? cameraImageInput : uploadImageInput;
+          otherInput.value = "";
+        } else {
+          fileDisplay.textContent =
+            translations[currentLanguage].noImageSelected;
+        }
+      }
+
+      uploadImageInput.addEventListener("change", handleImageChange);
+      cameraImageInput.addEventListener("change", handleImageChange);
+
+      // Function to convert date from YYYY-MM-DD to DD/MM/YYYY
+      function formatDate(dateStr) {
+        if (!dateStr) return "";
+        const [year, month, day] = dateStr.split("-");
+        return `${day}/${month}/${year}`;
+      }
+
+      // Function to convert image file to data URL
+      function getImageDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Form submission
+      document
+        .getElementById("membershipForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const submitButton = this.querySelector('button[type="submit"]');
+          submitButton.classList.add("loading");
+          submitButton.disabled = true;
+
+          // Collect form data
+          const formData = new FormData(this);
+          const data = {
+            fullName: formData.get("fullName"),
+            nationalId: formData.get("nationalId"),
+            dateOfBirth: formatDate(formData.get("dateOfBirth")), // Format date to DD/MM/YYYY
+            phone: formData.get("phone"),
+            email:
+              formData.get("email") ||
+              translations[currentLanguage].notProvided,
+            gender:
+              formData.get("gender") === "male"
+                ? translations[currentLanguage].male
+                : translations[currentLanguage].female,
+            membershipType: formData.get("membershipType"),
+            swimmingLevel: formData.get("swimmingLevel"),
+            trainingDays:
+              formData.getAll("trainingDays").join(", ") ||
+              translations[currentLanguage].noneSelected,
+            healthConditions:
+              formData.get("healthConditions") ||
+              translations[currentLanguage].none,
+            emergencyContact: formData.get("emergencyContact"),
+            terms: formData.get("terms")
+              ? translations[currentLanguage].agreed
+              : translations[currentLanguage].notAgreed,
+            profileImage: capturedFile || formData.get("profileImage"),
+          };
+
+          try {
+            // Prepare form preview
+            const formPreview = document.getElementById("formPreview");
+            formPreview.style.direction =
+              currentLanguage === "ar" ? "rtl" : "ltr";
+            document.getElementById("previewFullName").textContent =
+              data.fullName;
+            document.getElementById("previewNationalId").textContent =
+              data.nationalId;
+            document.getElementById("previewDateOfBirth").textContent =
+              data.dateOfBirth;
+            document.getElementById("previewPhone").textContent = data.phone;
+            document.getElementById("previewEmail").textContent = data.email;
+            document.getElementById("previewGender").textContent = data.gender;
+            document.getElementById("previewMembershipType").textContent =
+              data.membershipType === "monthly"
+                ? translations[currentLanguage].monthly
+                : data.membershipType === "quarterly"
+                ? translations[currentLanguage].quarterly
+                : translations[currentLanguage].annual;
+            document.getElementById("previewSwimmingLevel").textContent =
+              data.swimmingLevel === "beginner"
+                ? translations[currentLanguage].beginner
+                : data.swimmingLevel === "intermediate"
+                ? translations[currentLanguage].intermediate
+                : translations[currentLanguage].advanced;
+            document.getElementById("previewTrainingDays").textContent =
+              data.trainingDays;
+            document.getElementById("previewHealthConditions").textContent =
+              data.healthConditions;
+            document.getElementById("previewEmergencyContact").textContent =
+              data.emergencyContact;
+            document.getElementById("previewTerms").textContent = data.terms;
+
+            // Handle profile image
+            const previewImage = document.getElementById("previewImage");
+            if (data.profileImage && data.profileImage.size > 0) {
+              const imageDataURL = await getImageDataURL(data.profileImage);
+              previewImage.src = imageDataURL;
+              previewImage.style.display = "block";
             } else {
-                fileDisplay.textContent = translations[currentLanguage].noImageSelected;
+              previewImage.style.display = "none";
             }
-        }
 
-        uploadImageInput.addEventListener('change', handleImageChange);
-        cameraImageInput.addEventListener('change', handleImageChange);
-
-        // Function to convert date from YYYY-MM-DD to DD/MM/YYYY
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const [year, month, day] = dateStr.split('-');
-            return `${day}/${month}/${year}`;
-        }
-
-        // Function to convert image file to base64
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]); // Remove data:image/...;base64, prefix
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
+            // Generate image using html2canvas
+            const canvas = await html2canvas(formPreview, {
+              backgroundColor: "#ffffff",
+              scale: 2, // Increase resolution
             });
-        }
+            const imageDataURL = canvas.toDataURL("image/png");
 
-        // Form submission
-        document.getElementById('membershipForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+            // Create download link
+            const link = document.createElement("a");
+            link.href = imageDataURL;
+            link.download =
+              currentLanguage === "ar"
+                ? "استمارة_عضوية_السباحة.png"
+                : "Swimming_Membership_Form.png";
+            link.click();
 
-            const submitButton = this.querySelector('button[type="submit"]');
-            submitButton.classList.add('loading');
-            submitButton.disabled = true;
-
-            // Collect form data
-            const formData = new FormData(this);
-            const data = {
-                fullName: formData.get('fullName'),
-                nationalId: formData.get('nationalId'),
-                dateOfBirth: formatDate(formData.get('dateOfBirth')), // Format date to DD/MM/YYYY
-                phone: formData.get('phone'),
-                email: formData.get('email'),
-                gender: formData.get('gender'),
-                membershipType: formData.get('membershipType'),
-                swimmingLevel: formData.get('swimmingLevel'),
-                trainingDays: formData.getAll('trainingDays').join(', '),
-                healthConditions: formData.get('healthConditions'),
-                emergencyContact: formData.get('emergencyContact'),
-                terms: formData.get('terms') ? translations[currentLanguage].agreed : translations[currentLanguage].notAgreed,
-                profileImage: capturedFile || formData.get('profileImage')
-            };
-
-            try {
-                // Convert image to base64 if exists
-                let imageBase64 = null;
-                if (data.profileImage && data.profileImage.size > 0) {
-                    imageBase64 = await getBase64(data.profileImage);
-                }
-
-                // Create Word document using docx.js
-                const { Document, Packer, Paragraph, TextRun, ImageRun } = docx;
-                const doc = new Document({
-                    sections: [{
-                        properties: {},
-                        children: [
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: translations[currentLanguage].formTitle,
-                                        bold: true,
-                                        size: 32,
-                                        font: "Tajawal"
-                                    })
-                                ],
-                                alignment: "center"
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: translations[currentLanguage].formSubtitle,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ],
-                                alignment: "center",
-                                spacing: { after: 400 }
-                            }),
-                            // Add profile image if available
-                            ...(imageBase64 ? [
-                                new Paragraph({
-                                    children: [
-                                        new ImageRun({
-                                            data: Uint8Array.from(atob(imageBase64), c => c.charCodeAt(0)),
-                                            transformation: {
-                                                width: 100,
-                                                height: 100
-                                            }
-                                        })
-                                    ],
-                                    alignment: "center",
-                                    spacing: { after: 200 }
-                                })
-                            ] : []),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: translations[currentLanguage].personalInfo,
-                                        bold: true,
-                                        size: 28,
-                                        font: "Tajawal"
-                                    })
-                                ],
-                                spacing: { after: 200 }
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].fullName}: ${data.fullName}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].nationalId}: ${data.nationalId}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].dateOfBirth}: ${data.dateOfBirth}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].phone}: ${data.phone}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].email}: ${data.email || translations[currentLanguage].notProvided}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].gender}: ${data.gender === 'male' ? translations[currentLanguage].male : translations[currentLanguage].female}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: translations[currentLanguage].membershipDetails,
-                                        bold: true,
-                                        size: 28,
-                                        font: "Tajawal"
-                                    })
-                                ],
-                                spacing: { after: 200 }
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].membershipType}: ${data.membershipType === 'monthly' ? translations[currentLanguage].monthly : data.membershipType === 'quarterly' ? translations[currentLanguage].quarterly : translations[currentLanguage].annual}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].swimmingLevel}: ${data.swimmingLevel === 'beginner' ? translations[currentLanguage].beginner : data.swimmingLevel === 'intermediate' ? translations[currentLanguage].intermediate : translations[currentLanguage].advanced}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].trainingDays}: ${data.trainingDays || translations[currentLanguage].noneSelected}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: translations[currentLanguage].additionalInfo,
-                                        bold: true,
-                                        size: 28,
-                                        font: "Tajawal"
-                                    })
-                                ],
-                                spacing: { after: 200 }
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].healthConditions}: ${data.healthConditions || translations[currentLanguage].none}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].emergencyContact}: ${data.emergencyContact}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            }),
-                            new Paragraph({
-                                children: [
-                                    new TextRun({
-                                        text: `${translations[currentLanguage].terms}: ${data.terms}`,
-                                        size: 24,
-                                        font: "Tajawal"
-                                    })
-                                ]
-                            })
-                        ]
-                    }]
-                });
-
-                // Generate and download the Word document
-                const blob = await Packer.toBlob(doc);
-                saveAs(blob, currentLanguage === 'ar' ? "استمارة_عضوية_السباحة.docx" : "Swimming_Membership_Form.docx");
-
-                // Show success message with SweetAlert2
-                Swal.fire({
-                    icon: 'success',
-                    title: translations[currentLanguage].successTitle,
-                    text: translations[currentLanguage].successText,
-                    confirmButtonText: translations[currentLanguage].ok,
-                    confirmButtonColor: '#3498db'
-                });
-            } catch (error) {
-                // Show error message with SweetAlert2
-                Swal.fire({
-                    icon: 'error',
-                    title: translations[currentLanguage].errorTitle,
-                    text: translations[currentLanguage].errorText,
-                    confirmButtonText: translations[currentLanguage].ok,
-                    confirmButtonColor: '#3498db'
-                });
-            } finally {
-                submitButton.classList.remove('loading');
-                submitButton.disabled = false;
-            }
+            // Show success message with SweetAlert2
+            Swal.fire({
+              icon: "success",
+              title: translations[currentLanguage].successTitle,
+              text: translations[currentLanguage].successText,
+              confirmButtonText: translations[currentLanguage].ok,
+              confirmButtonColor: "#3498db",
+            });
+          } catch (error) {
+            // Show error message with SweetAlert2
+            Swal.fire({
+              icon: "error",
+              title: translations[currentLanguage].errorTitle,
+              text: translations[currentLanguage].errorText,
+              confirmButtonText: translations[currentLanguage].ok,
+              confirmButtonColor: "#3498db",
+            });
+          } finally {
+            submitButton.classList.remove("loading");
+            submitButton.disabled = false;
+          }
         });
     </script>
-</body>
+  </body>
 </html>
