@@ -192,7 +192,7 @@
         align-items: center;
         min-height: 40px;
       }
-      /* Camera Modal Styles */
+      
       .camera-modal {
         display: none;
         position: fixed;
@@ -233,7 +233,7 @@
       .camera-modal-content button:hover {
         background-color: #2980b9;
       }
-      /* Submit Button Styles */
+      
       button[type="submit"] {
         background-color: var(--primary-color);
         color: white;
@@ -283,7 +283,7 @@
       button[type="submit"].loading span {
         opacity: 0;
       }
-      /* Mode and Language Toggle Button Styles */
+     
       .mode-toggle,
       .language-toggle {
         position: fixed;
@@ -323,7 +323,7 @@
       .language-toggle button i {
         font-size: 16px;
       }
-      /* Form Preview Styles for Image Generation */
+      
       #formPreview {
         position: fixed;
         top: -9999px;
@@ -442,19 +442,19 @@
         }
       }
     </style>
-    <!-- Google Fonts -->
+   
     <link
       href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <!-- FontAwesome -->
+    
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <!-- SweetAlert2 -->
+ 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- html2canvas for image generation -->
+   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <body>
@@ -675,7 +675,7 @@
       </form>
     </div>
 
-    <!-- Camera Modal -->
+
     <div class="camera-modal" id="cameraModal">
       <div class="camera-modal-content">
         <video id="cameraStream" autoplay></video>
@@ -684,7 +684,7 @@
       </div>
     </div>
 
-    <!-- Form Preview for Image Generation -->
+   
     <div id="formPreview">
       <h1 data-i18n="formTitle"></h1>
       <p data-i18n="formSubtitle"></p>
@@ -743,7 +743,7 @@
     </div>
 
     <script>
-      // Language translations
+     
       const translations = {
         ar: {
           formTitle: "استمارة عضوية نشاط السباحة",
@@ -850,7 +850,7 @@
         },
       };
 
-      // Theme toggle
+  
       const themeToggle = document.getElementById("themeToggle");
       const body = document.body;
       const savedTheme = localStorage.getItem("theme") || "light";
@@ -872,7 +872,7 @@
             : '<i class="fas fa-moon"></i> الوضع الداكن';
       }
 
-      // Language toggle
+      
       const languageToggle = document.getElementById("languageToggle");
       let currentLanguage = localStorage.getItem("language") || "ar";
       document.documentElement.lang = currentLanguage === "ar" ? "ar" : "en";
@@ -907,7 +907,7 @@
             element.placeholder = translations[lang][key];
           }
         });
-        // Update select options dynamically
+       
         const membershipType = document.getElementById("membershipType");
         membershipType.innerHTML = `
                 <option value="" data-i18n="selectMembership">${translations[lang].selectMembership}</option>
@@ -922,7 +922,7 @@
                 <option value="intermediate" data-i18n="intermediate">${translations[lang].intermediate}</option>
                 <option value="advanced" data-i18n="advanced">${translations[lang].advanced}</option>
             `;
-        // Update file display text
+  
         const fileDisplay = document.getElementById("fileDisplay");
         fileDisplay.textContent = translations[lang].noImageSelected;
       }
@@ -934,7 +934,7 @@
             : '<i class="fas fa-globe"></i> العربية';
       }
 
-      // File and Camera input handlers
+   
       const uploadIcon = document.getElementById("uploadIcon");
       const cameraIcon = document.getElementById("cameraIcon");
       const uploadImageInput = document.getElementById("uploadImage");
@@ -947,14 +947,14 @@
       let stream = null;
       let capturedFile = null;
 
-      // Handle file upload
+  
       uploadIcon.addEventListener("click", () => {
         uploadImageInput.click();
       });
 
-      // Handle camera activation
+
       cameraIcon.addEventListener("click", async () => {
-        // Check if WebRTC is supported
+    
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
           Swal.fire({
             icon: "error",
@@ -963,12 +963,12 @@
             confirmButtonText: translations[currentLanguage].ok,
             confirmButtonColor: "#3498db",
           });
-          cameraImageInput.click(); // Fallback to default input
+          cameraImageInput.click(); 
           return;
         }
 
         try {
-          // Request camera access
+     
           stream = await navigator.mediaDevices.getUserMedia({ video: true });
           cameraStream.srcObject = stream;
           cameraModal.style.display = "flex";
@@ -980,11 +980,11 @@
             confirmButtonText: translations[currentLanguage].ok,
             confirmButtonColor: "#3498db",
           });
-          cameraImageInput.click(); // Fallback to default input
+          cameraImageInput.click(); 
         }
       });
 
-      // Capture photo from camera
+ 
       captureButton.addEventListener("click", () => {
         const canvas = document.createElement("canvas");
         canvas.width = cameraStream.videoWidth;
@@ -992,19 +992,19 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
 
-        // Convert canvas to blob
+       
         canvas.toBlob((blob) => {
           capturedFile = new File([blob], `captured_photo_${Date.now()}.jpg`, {
             type: "image/jpeg",
           });
           fileDisplay.textContent = capturedFile.name;
-          uploadImageInput.value = ""; // Clear upload input
-          cameraImageInput.value = ""; // Clear camera input
+          uploadImageInput.value = ""; 
+          cameraImageInput.value = ""; 
           closeCamera();
         }, "image/jpeg");
       });
 
-      // Close camera modal
+  
       closeCameraButton.addEventListener("click", () => {
         closeCamera();
       });
@@ -1018,13 +1018,13 @@
         cameraModal.style.display = "none";
       }
 
-      // Update file display when an image is selected
+   
       function handleImageChange() {
         const selectedFile = this.files && this.files[0];
         if (selectedFile) {
           fileDisplay.textContent = selectedFile.name;
-          capturedFile = null; // Clear captured file
-          // Clear the other input
+          capturedFile = null; 
+         
           const otherInput =
             this === uploadImageInput ? cameraImageInput : uploadImageInput;
           otherInput.value = "";
@@ -1037,14 +1037,14 @@
       uploadImageInput.addEventListener("change", handleImageChange);
       cameraImageInput.addEventListener("change", handleImageChange);
 
-      // Function to convert date from YYYY-MM-DD to DD/MM/YYYY
+   
       function formatDate(dateStr) {
         if (!dateStr) return "";
         const [year, month, day] = dateStr.split("-");
         return `${day}/${month}/${year}`;
       }
 
-      // Function to convert image file to data URL
+
       function getImageDataURL(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -1054,7 +1054,7 @@
         });
       }
 
-      // Form submission
+  
       document
         .getElementById("membershipForm")
         .addEventListener("submit", async function (event) {
@@ -1064,12 +1064,12 @@
           submitButton.classList.add("loading");
           submitButton.disabled = true;
 
-          // Collect form data
+       
           const formData = new FormData(this);
           const data = {
             fullName: formData.get("fullName"),
             nationalId: formData.get("nationalId"),
-            dateOfBirth: formatDate(formData.get("dateOfBirth")), // Format date to DD/MM/YYYY
+            dateOfBirth: formatDate(formData.get("dateOfBirth")), 
             phone: formData.get("phone"),
             email:
               formData.get("email") ||
@@ -1094,7 +1094,7 @@
           };
 
           try {
-            // Prepare form preview
+           
             const formPreview = document.getElementById("formPreview");
             formPreview.style.direction =
               currentLanguage === "ar" ? "rtl" : "ltr";
@@ -1127,7 +1127,7 @@
               data.emergencyContact;
             document.getElementById("previewTerms").textContent = data.terms;
 
-            // Handle profile image
+            
             const previewImage = document.getElementById("previewImage");
             if (data.profileImage && data.profileImage.size > 0) {
               const imageDataURL = await getImageDataURL(data.profileImage);
@@ -1137,14 +1137,14 @@
               previewImage.style.display = "none";
             }
 
-            // Generate image using html2canvas
+        
             const canvas = await html2canvas(formPreview, {
               backgroundColor: "#ffffff",
-              scale: 2, // Increase resolution
+              scale: 2, 
             });
             const imageDataURL = canvas.toDataURL("image/png");
 
-            // Create download link
+           
             const link = document.createElement("a");
             link.href = imageDataURL;
             link.download =
@@ -1153,7 +1153,7 @@
                 : "Swimming_Membership_Form.png";
             link.click();
 
-            // Show success message with SweetAlert2
+           
             Swal.fire({
               icon: "success",
               title: translations[currentLanguage].successTitle,
@@ -1162,7 +1162,7 @@
               confirmButtonColor: "#3498db",
             });
           } catch (error) {
-            // Show error message with SweetAlert2
+            
             Swal.fire({
               icon: "error",
               title: translations[currentLanguage].errorTitle,
