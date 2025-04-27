@@ -169,7 +169,49 @@
             align-items: center;
             min-height: 40px;
         }
-        button {
+        /* Camera Modal Styles */
+        .camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .camera-modal-content {
+            background-color: var(--form-bg-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        .camera-modal-content video {
+            width: 100%;
+            max-height: 400px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .camera-modal-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .camera-modal-content button:hover {
+            background-color: #2980b9;
+        }
+        /* Submit Button Styles */
+        button[type="submit"] {
             background-color: var(--primary-color);
             color: white;
             padding: 14px 30px;
@@ -179,29 +221,42 @@
             font-size: 18px;
             display: block;
             margin: 30px auto;
-            transition: background-color 0.3s;
             position: relative;
+            transition: background-color 0.3s, transform 0.2s;
         }
-        button:hover {
+        button[type="submit"]:hover {
             background-color: #2980b9;
+            transform: scale(1.05);
         }
-        button:disabled {
+        button[type="submit"]:disabled {
             background-color: #6b7280;
             cursor: not-allowed;
+            transform: none;
         }
-        .section-title {
-            font-size: 20px;
-            color: var(--text-color);
-            margin: 20px 0 10px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
+        button[type="submit"] .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        button[type="submit"].loading .loader {
+            display: block;
+        }
+        button[type="submit"].loading span {
             opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards;
-            animation-delay: calc(0.2s + var(--animation-order) * 0.1s);
         }
-        .section-title:nth-child(1) { --animation-order: 1; }
-        .section-title:nth-child(2) { --animation-order: 2; }
-        .section-title:nth-child(3) { --animation-order: 3; }
+        /* Mode and Language Toggle Button Styles */
         .mode-toggle, .language-toggle {
             position: fixed;
             top: 20px;
@@ -221,37 +276,21 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 10px 15px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s, transform 0.2s;
         }
         .mode-toggle button:hover, .language-toggle button:hover {
             background-color: #2980b9;
+            transform: scale(1.05);
         }
-        .loader {
-            display: none;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        button.loading .loader {
-            display: block;
-        }
-        button.loading span {
-            opacity: 0;
+        .mode-toggle button i, .language-toggle button i {
+            font-size: 16px;
         }
         @media (max-width: 600px) {
             .form-container {
@@ -287,8 +326,18 @@
                 top: 10px;
             }
             .mode-toggle button, .language-toggle button {
-                padding: 8px;
+                padding: 8px 12px;
                 font-size: 12px;
+            }
+            .mode-toggle button i, .language-toggle button i {
+                font-size: 14px;
+            }
+            .camera-modal-content video {
+                max-height: 300px;
+            }
+            button[type="submit"] {
+                padding: 12px 20px;
+                font-size: 16px;
             }
         }
     </style>
@@ -308,7 +357,7 @@
         <button id="themeToggle"><i class="fas fa-moon"></i> الوضع الداكن</button>
     </div>
     <div class="language-toggle">
-        <button id="languageToggle">English</button>
+        <button id="languageToggle"><i class="fas fa-globe"></i> English</button>
     </div>
     <div class="form-container">
         <div class="form-header">
@@ -413,6 +462,16 @@
             <button type="submit" data-i18n="submit"><span>إرسال الاستمارة</span><div class="loader"></div></button>
         </form>
     </div>
+
+    <!-- Camera Modal -->
+    <div class="camera-modal" id="cameraModal">
+        <div class="camera-modal-content">
+            <video id="cameraStream" autoplay></video>
+            <button id="captureButton" data-i18n="capture">التقاط الصورة</button>
+            <button id="closeCameraButton" data-i18n="close">إغلاق</button>
+        </div>
+    </div>
+
     <script>
         // Language translations
         const translations = {
@@ -461,7 +520,10 @@
                 noneSelected: "لم يتم اختيار أيام",
                 none: "لا توجد",
                 ok: "موافق",
-                noImageSelected: "لم يتم اختيار صورة"
+                noImageSelected: "لم يتم اختيار صورة",
+                capture: "التقاط الصورة",
+                close: "إغلاق",
+                cameraError: "فشل في الوصول إلى الكاميرا. تأكد من منح الأذونات أو حاول رفع صورة من الملفات."
             },
             en: {
                 formTitle: "Swimming Activity Membership Form",
@@ -508,7 +570,10 @@
                 noneSelected: "No days selected",
                 none: "None",
                 ok: "OK",
-                noImageSelected: "No image selected"
+                noImageSelected: "No image selected",
+                capture: "Capture Photo",
+                close: "Close",
+                cameraError: "Failed to access the camera. Please ensure permissions are granted or try uploading an image from files."
             }
         };
 
@@ -553,7 +618,11 @@
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (element.tagName === 'BUTTON') {
-                    element.querySelector('span').textContent = translations[lang][key];
+                    if (element.querySelector('span')) {
+                        element.querySelector('span').textContent = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
                 } else {
                     element.textContent = translations[lang][key];
                 }
@@ -582,30 +651,100 @@
         }
 
         function updateLanguageButton(lang) {
-            languageToggle.textContent = lang === 'ar' ? 'English' : 'العربية';
+            languageToggle.innerHTML = lang === 'ar'
+                ? '<i class="fas fa-globe"></i> English'
+                : '<i class="fas fa-globe"></i> العربية';
         }
 
-        // File input handlers
+        // File and Camera input handlers
         const uploadIcon = document.getElementById('uploadIcon');
         const cameraIcon = document.getElementById('cameraIcon');
         const uploadImageInput = document.getElementById('uploadImage');
         const cameraImageInput = document.getElementById('cameraImage');
         const fileDisplay = document.getElementById('fileDisplay');
+        const cameraModal = document.getElementById('cameraModal');
+        const cameraStream = document.getElementById('cameraStream');
+        const captureButton = document.getElementById('captureButton');
+        const closeCameraButton = document.getElementById('closeCameraButton');
+        let stream = null;
+        let capturedFile = null;
 
+        // Handle file upload
         uploadIcon.addEventListener('click', () => {
             uploadImageInput.click();
         });
 
-        cameraIcon.addEventListener('click', () => {
-            cameraImageInput.click();
+        // Handle camera activation
+        cameraIcon.addEventListener('click', async () => {
+            // Check if WebRTC is supported
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                Swal.fire({
+                    icon: 'error',
+                    title: translations[currentLanguage].errorTitle,
+                    text: translations[currentLanguage].cameraError,
+                    confirmButtonText: translations[currentLanguage].ok,
+                    confirmButtonColor: '#3498db'
+                });
+                cameraImageInput.click(); // Fallback to default input
+                return;
+            }
+
+            try {
+                // Request camera access
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                cameraStream.srcObject = stream;
+                cameraModal.style.display = 'flex';
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: translations[currentLanguage].errorTitle,
+                    text: translations[currentLanguage].cameraError,
+                    confirmButtonText: translations[currentLanguage].ok,
+                    confirmButtonColor: '#3498db'
+                });
+                cameraImageInput.click(); // Fallback to default input
+            }
         });
+
+        // Capture photo from camera
+        captureButton.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = cameraStream.videoWidth;
+            canvas.height = cameraStream.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to blob
+            canvas.toBlob(blob => {
+                capturedFile = new File([blob], `captured_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                fileDisplay.textContent = capturedFile.name;
+                uploadImageInput.value = ''; // Clear upload input
+                cameraImageInput.value = ''; // Clear camera input
+                closeCamera();
+            }, 'image/jpeg');
+        });
+
+        // Close camera modal
+        closeCameraButton.addEventListener('click', () => {
+            closeCamera();
+        });
+
+        function closeCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                cameraStream.srcObject = null;
+                stream = null;
+            }
+            cameraModal.style.display = 'none';
+        }
 
         // Update file display when an image is selected
         function handleImageChange() {
             const selectedFile = this.files && this.files[0];
             if (selectedFile) {
                 fileDisplay.textContent = selectedFile.name;
-                // Clear the other input to ensure only one file is submitted
+                capturedFile = null; // Clear captured file
+                // Clear the other input
                 const otherInput = this === uploadImageInput ? cameraImageInput : uploadImageInput;
                 otherInput.value = '';
             } else {
@@ -656,7 +795,7 @@
                 healthConditions: formData.get('healthConditions'),
                 emergencyContact: formData.get('emergencyContact'),
                 terms: formData.get('terms') ? translations[currentLanguage].agreed : translations[currentLanguage].notAgreed,
-                profileImage: formData.get('profileImage')
+                profileImage: capturedFile || formData.get('profileImage')
             };
 
             try {
