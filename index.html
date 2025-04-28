@@ -12,6 +12,7 @@
         --background-color: #f0f2f5;
         --form-bg-color: #ffffff;
         --input-bg-color: #fafafa;
+        --checkbox-selected: #2ecc71;
       }
       [data-theme="dark"] {
         --primary-color: #60a5fa;
@@ -20,6 +21,7 @@
         --background-color: #1f2937;
         --form-bg-color: #374151;
         --input-bg-color: #4b5563;
+        --checkbox-selected: #34d399;
       }
       body {
         font-family: "Tajawal", Arial, sans-serif;
@@ -97,7 +99,6 @@
       label {
         font-weight: bold;
         color: var(--text-color);
-        flex: 0 0 150px;
       }
       input,
       select,
@@ -127,13 +128,12 @@
         flex: 1;
         min-width: 250px;
       }
-      .checkbox-group,
-      .radio-group {
+      .checkbox-group {
         margin-bottom: 20px;
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 5px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
         opacity: 0;
         animation: fadeIn 0.8s ease-out forwards;
         animation-delay: calc(0.3s + var(--animation-order) * 0.1s);
@@ -141,19 +141,56 @@
       .checkbox-group:nth-child(1) {
         --animation-order: 7;
       }
-      .radio-group:nth-child(1) {
-        --animation-order: 8;
-      }
-      .checkbox-group label,
-      .radio-group label {
-        font-weight: normal;
+      .checkbox-group label {
+        font-weight: bold;
         color: var(--text-color);
-        flex: none;
-        margin-right: 5px;
+        margin-bottom: 4px;
       }
-      .checkbox-group input,
-      .radio-group input {
-        margin-left: 5px;
+      .checkbox-group .option {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+        background-color: var(--input-bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        transition: background-color 0.3s, border-color 0.3s;
+        cursor: pointer;
+      }
+      .checkbox-group .option:hover {
+        background-color: var(--form-bg-color);
+        border-color: var(--primary-color);
+      }
+      .checkbox-group input[type="checkbox"] {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 4px;
+        margin-left: 12px;
+        cursor: pointer;
+        position: relative;
+      }
+      .checkbox-group input[type="checkbox"]:checked {
+        background-color: var(--checkbox-selected);
+        border-color: var(--checkbox-selected);
+      }
+      .checkbox-group input[type="checkbox"]:checked::after {
+        content: "\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .checkbox-group .option label {
+        font-weight: normal;
+        flex: 1;
+        cursor: pointer;
+        font-size: 16px;
       }
       .file-input-container {
         display: flex;
@@ -392,6 +429,22 @@
         .form-group-inline .form-group {
           min-width: 100%;
         }
+        .checkbox-group {
+          gap: 6px;
+        }
+        .checkbox-group label {
+          margin-bottom: 2px;
+        }
+        .checkbox-group .option {
+          padding: 8px;
+        }
+        .checkbox-group input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+        }
+        .checkbox-group .option label {
+          font-size: 14px;
+        }
         .file-input-container {
           flex-direction: column;
           align-items: stretch;
@@ -553,12 +606,13 @@
             />
           </div>
         </div>
-        <div class="radio-group">
-          <label data-i18n="gender">الجنس</label>
-          <input type="radio" id="male" name="gender" value="male" required />
-          <label for="male" data-i18n="male">ذكر</label>
-          <input type="radio" id="female" name="gender" value="female" />
-          <label for="female" data-i18n="female">أنثى</label>
+        <div class="form-group">
+          <label for="gender" data-i18n="gender">الجنس</label>
+          <select id="gender" name="gender" required>
+            <option value="" data-i18n="selectGender">اختر الجنس</option>
+            <option value="male" data-i18n="male">ذكر</option>
+            <option value="female" data-i18n="female">أنثى</option>
+          </select>
         </div>
 
         <div class="section-title" data-i18n="membershipDetails">
@@ -590,41 +644,51 @@
         </div>
         <div class="checkbox-group">
           <label data-i18n="trainingDays">الأيام المفضلة للتدريب</label>
-          <input
-            type="checkbox"
-            id="sunday"
-            name="trainingDays"
-            value="sunday"
-          />
-          <label for="sunday" data-i18n="sunday">الأحد</label>
-          <input
-            type="checkbox"
-            id="monday"
-            name="trainingDays"
-            value="monday"
-          />
-          <label for="monday" data-i18n="monday">الإثنين</label>
-          <input
-            type="checkbox"
-            id="tuesday"
-            name="trainingDays"
-            value="tuesday"
-          />
-          <label for="tuesday" data-i18n="tuesday">الثلاثاء</label>
-          <input
-            type="checkbox"
-            id="wednesday"
-            name="trainingDays"
-            value="wednesday"
-          />
-          <label for="wednesday" data-i18n="wednesday">الأربعاء</label>
-          <input
-            type="checkbox"
-            id="thursday"
-            name="trainingDays"
-            value="thursday"
-          />
-          <label for="thursday" data-i18n="thursday">الخميس</label>
+          <div class="option">
+            <input
+              type="checkbox"
+              id="sunday"
+              name="trainingDays"
+              value="sunday"
+            />
+            <label for="sunday" data-i18n="sunday">الأحد</label>
+          </div>
+          <div class="option">
+            <input
+              type="checkbox"
+              id="monday"
+              name="trainingDays"
+              value="monday"
+            />
+            <label for="monday" data-i18n="monday">الإثنين</label>
+          </div>
+          <div class="option">
+            <input
+              type="checkbox"
+              id="tuesday"
+              name="trainingDays"
+              value="tuesday"
+            />
+            <label for="tuesday" data-i18n="tuesday">الثلاثاء</label>
+          </div>
+          <div class="option">
+            <input
+              type="checkbox"
+              id="wednesday"
+              name="trainingDays"
+              value="wednesday"
+            />
+            <label for="wednesday" data-i18n="wednesday">الأربعاء</label>
+          </div>
+          <div class="option">
+            <input
+              type="checkbox"
+              id="thursday"
+              name="trainingDays"
+              value="thursday"
+            />
+            <label for="thursday" data-i18n="thursday">الخميس</label>
+          </div>
         </div>
 
         <div class="section-title" data-i18n="additionalInfo">
@@ -654,10 +718,12 @@
           />
         </div>
         <div class="checkbox-group">
-          <input type="checkbox" id="terms" name="terms" required />
-          <label for="terms" data-i18n="terms"
-            >أوافق على شروط وأحكام العضوية</label
-          >
+          <div class="option">
+            <input type="checkbox" id="terms" name="terms" required />
+            <label for="terms" data-i18n="terms"
+              >أوافق على شروط وأحكام العضوية</label
+            >
+          </div>
         </div>
 
         <button type="submit" data-i18n="submit">
@@ -670,7 +736,9 @@
     <div class="camera-modal" id="cameraModal">
       <div class="camera-modal-content">
         <video id="cameraStream" autoplay></video>
-        <button id="switchCameraButton" data-i18n="switchCamera">تبديل الكاميرا</button>
+        <button id="switchCameraButton" data-i18n="switchCamera">
+          تبديل الكاميرا
+        </button>
         <button id="captureButton" data-i18n="capture">التقاط الصورة</button>
         <button id="closeCameraButton" data-i18n="close">إغلاق</button>
       </div>
@@ -746,6 +814,7 @@
           phone: "رقم الهاتف",
           email: "البريد الإلكتروني",
           gender: "الجنس",
+          selectGender: "اختر الجنس",
           male: "ذكر",
           female: "أنثى",
           membershipDetails: "تفاصيل العضوية",
@@ -771,7 +840,8 @@
           terms: "أوافق على شروط وأحكام العضوية",
           submit: "إرسال الاستمارة",
           successTitle: "تم الإرسال بنجاح!",
-          successText: "تم إنشاء وتنزيل صورة الاستمارة بنجاح. يرجى إرسال الصورة عبر واتساب.",
+          successText:
+            "تم تنزيل صورة الاستمارة. يرجى فتح واتساب وإرفاق الصورة لإكمال التسجيل.",
           errorTitle: "حدث خطأ!",
           errorText: "فشل في إنشاء صورة الاستمارة. حاول مرة أخرى.",
           agreed: "موافق",
@@ -787,7 +857,8 @@
           cameraError:
             "فشل في الوصول إلى الكاميرا. تأكد من منح الأذونات أو حاول رفع صورة من الملفات.",
           requiredFields: "يرجى ملء جميع الحقول المطلوبة",
-          whatsappError: "فشل في فتح واتساب. يرجى إرسال الصورة يدويًا إلى +201060940751",
+          serverError:
+            "فشل في إرسال الصورة إلى واتساب. يرجى إرفاق الصورة المُنزلة يدويًا إلى +201060940751 عبر واتساب.",
         },
         en: {
           formTitle: "Swimming Activity Membership Form",
@@ -800,6 +871,7 @@
           phone: "Phone Number",
           email: "Email Address",
           gender: "Gender",
+          selectGender: "Select Gender",
           male: "Male",
           female: "Female",
           membershipDetails: "Membership Details",
@@ -825,9 +897,10 @@
           terms: "I agree to the membership terms and conditions",
           submit: "Submit Form",
           successTitle: "Submitted Successfully!",
-          successText: "The form image has been created and downloaded successfully. Please send the image via WhatsApp.",
+          successText:
+            "The form image has been downloaded. Please open WhatsApp and attach the image to complete the registration.",
           errorTitle: "An Error Occurred!",
-          errorText: "Failed to create the form image. Please try again.",
+          errorText: "Failed to generate the form image. Please try again.",
           agreed: "Agreed",
           notAgreed: "Not Agreed",
           notProvided: "Not Provided",
@@ -841,7 +914,8 @@
           cameraError:
             "Failed to access the camera. Please ensure permissions are granted or try uploading an image from files.",
           requiredFields: "Please fill all required fields",
-          whatsappError: "Failed to open WhatsApp. Please send the image manually to +201060940751",
+          serverError:
+            "Failed to send the image to WhatsApp. Please attach the downloaded image manually to +201060940751 via WhatsApp.",
         },
       };
 
@@ -902,18 +976,24 @@
         });
         const membershipType = document.getElementById("membershipType");
         membershipType.innerHTML = `
-                <option value="" data-i18n="selectMembership">${translations[lang].selectMembership}</option>
-                <option value="monthly" data-i18n="monthly">${translations[lang].monthly}</option>
-                <option value="quarterly" data-i18n="quarterly">${translations[lang].quarterly}</option>
-                <option value="annual" data-i18n="annual">${translations[lang].annual}</option>
-            `;
+          <option value="" data-i18n="selectMembership">${translations[lang].selectMembership}</option>
+          <option value="monthly" data-i18n="monthly">${translations[lang].monthly}</option>
+          <option value="quarterly" data-i18n="quarterly">${translations[lang].quarterly}</option>
+          <option value="annual" data-i18n="annual">${translations[lang].annual}</option>
+        `;
         const swimmingLevel = document.getElementById("swimmingLevel");
         swimmingLevel.innerHTML = `
-                <option value="" data-i18n="selectLevel">${translations[lang].selectLevel}</option>
-                <option value="beginner" data-i18n="beginner">${translations[lang].beginner}</option>
-                <option value="intermediate" data-i18n="intermediate">${translations[lang].intermediate}</option>
-                <option value="advanced" data-i18n="advanced">${translations[lang].advanced}</option>
-            `;
+          <option value="" data-i18n="selectLevel">${translations[lang].selectLevel}</option>
+          <option value="beginner" data-i18n="beginner">${translations[lang].beginner}</option>
+          <option value="intermediate" data-i18n="intermediate">${translations[lang].intermediate}</option>
+          <option value="advanced" data-i18n="advanced">${translations[lang].advanced}</option>
+        `;
+        const gender = document.getElementById("gender");
+        gender.innerHTML = `
+          <option value="" data-i18n="selectGender">${translations[lang].selectGender}</option>
+          <option value="male" data-i18n="male">${translations[lang].male}</option>
+          <option value="female" data-i18n="female">${translations[lang].female}</option>
+        `;
         const fileDisplay = document.getElementById("fileDisplay");
         fileDisplay.textContent = translations[lang].noImageSelected;
       }
@@ -985,7 +1065,8 @@
       }
 
       switchCameraButton.addEventListener("click", async () => {
-        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+        currentFacingMode =
+          currentFacingMode === "user" ? "environment" : "user";
         try {
           await startCamera(currentFacingMode);
         } catch (error) {
@@ -1096,15 +1177,14 @@
               email:
                 formData.get("email") ||
                 translations[currentLanguage].notProvided,
-              gender:
-                formData.get("gender") === "male"
-                  ? translations[currentLanguage].male
-                  : translations[currentLanguage].female,
+              gender: formData.get("gender"),
               membershipType: formData.get("membershipType"),
               swimmingLevel: formData.get("swimmingLevel"),
               trainingDays:
-                formData.getAll("trainingDays").join(", ") ||
-                translations[currentLanguage].noneSelected,
+                formData
+                  .getAll("trainingDays")
+                  .map((day) => translations[currentLanguage][day] || day)
+                  .join(", ") || translations[currentLanguage].noneSelected,
               healthConditions:
                 formData.get("healthConditions") ||
                 translations[currentLanguage].none,
@@ -1133,7 +1213,10 @@
               data.dateOfBirth;
             document.getElementById("previewPhone").textContent = data.phone;
             document.getElementById("previewEmail").textContent = data.email;
-            document.getElementById("previewGender").textContent = data.gender;
+            document.getElementById("previewGender").textContent =
+              data.gender === "male"
+                ? translations[currentLanguage].male
+                : translations[currentLanguage].female;
             document.getElementById("previewMembershipType").textContent =
               data.membershipType === "monthly"
                 ? translations[currentLanguage].monthly
@@ -1183,30 +1266,48 @@
             downloadLink.click();
 
             const whatsappMessage = encodeURIComponent(
-              `استمارة عضوية السباحة لـ ${data.fullName}
-              الرقم القومي : ${data.nationalId}
-              تاريخ الميلاد : ${data.dateOfBirth}
-              النوع : ${data.gender}
-              الإيميل : ${data.email}
-              رقم الهاتف : ${data.phone}
-              مستوي السباحه : ${data.swimmingLevel}
-              الأيام المتاحه للتدريب : ${data.trainingDays}
-              
-              `
+              currentLanguage === "ar"
+                ? `استمارة عضوية السباحة\n` +
+                    `الاسم: ${data.fullName}\n` +
+                    `رقم البطاقة: ${data.nationalId}\n` +
+                    `تاريخ الميلاد: ${data.dateOfBirth}\n` +
+                    `رقم الهاتف: ${data.phone}\n` +
+                    `البريد الإلكتروني: ${data.email}\n` +
+                    `الجنس: ${data.gender === "male" ? "ذكر" : "أنثى"}\n` +
+                    `نوع العضوية: ${
+                      data.membershipType === "monthly"
+                        ? "شهري"
+                        : data.membershipType === "quarterly"
+                        ? "ربع سنوي"
+                        : "سنوي"
+                    }\n` +
+                    `مستوى السباحة: ${
+                      data.swimmingLevel === "beginner"
+                        ? "مبتدئ"
+                        : data.swimmingLevel === "intermediate"
+                        ? "متوسط"
+                        : "متقدم"
+                    }\n` +
+                    `أيام التدريب: ${data.trainingDays}\n` +
+                    `الحالة الصحية: ${data.healthConditions}\n` +
+                    `جهة الاتصال في الطوارئ: ${data.emergencyContact}\n` +
+                    `يرجى إرفاق الصورة المُنزلة من جهازك.`
+                : `Swimming Membership Form\n` +
+                    `Name: ${data.fullName}\n` +
+                    `National ID: ${data.nationalId}\n` +
+                    `Date of Birth: ${data.dateOfBirth}\n` +
+                    `Phone: ${data.phone}\n` +
+                    `Email: ${data.email}\n` +
+                    `Gender: ${data.gender === "male" ? "Male" : "Female"}\n` +
+                    `Membership Type: ${data.membershipType}\n` +
+                    `Swimming Level: ${data.swimmingLevel}\n` +
+                    `Training Days: ${data.trainingDays}\n` +
+                    `Health Conditions: ${data.healthConditions}\n` +
+                    `Emergency Contact: ${data.emergencyContact}\n` +
+                    `Please attach the downloaded image from your device.`
             );
+
             const whatsappLink = `https://api.whatsapp.com/send?phone=+201060940751&text=${whatsappMessage}`;
-            try {
-              window.open(whatsappLink, "_blank");
-            } catch (error) {
-              console.error("Error opening WhatsApp link:", error);
-              Swal.fire({
-                icon: "error",
-                title: translations[currentLanguage].errorTitle,
-                text: translations[currentLanguage].whatsappError,
-                confirmButtonText: translations[currentLanguage].ok,
-                confirmButtonColor: "#3498db",
-              });
-            }
 
             Swal.fire({
               icon: "success",
@@ -1214,13 +1315,15 @@
               text: translations[currentLanguage].successText,
               confirmButtonText: translations[currentLanguage].ok,
               confirmButtonColor: "#3498db",
+            }).then(() => {
+              window.open(whatsappLink, "_blank");
             });
           } catch (error) {
             console.error("Form submission error:", error);
             Swal.fire({
               icon: "error",
               title: translations[currentLanguage].errorTitle,
-              text: error.message || translations[currentLanguage].errorText,
+              text: translations[currentLanguage].errorText,
               confirmButtonText: translations[currentLanguage].ok,
               confirmButtonColor: "#3498db",
             });
