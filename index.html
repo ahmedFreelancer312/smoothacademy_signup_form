@@ -13,7 +13,10 @@
         --form-bg-color: #ffffff;
         --input-bg-color: #fafafa;
         --checkbox-selected: #2ecc71;
+        --error-color: #e74c3c;
+        --success-color: #2ecc71;
       }
+      
       [data-theme="dark"] {
         --primary-color: #60a5fa;
         --text-color: #e5e7eb;
@@ -22,6 +25,8 @@
         --form-bg-color: #374151;
         --input-bg-color: #4b5563;
         --checkbox-selected: #34d399;
+        --error-color: #f87171;
+        --success-color: #34d399;
       }
       body {
         font-family: "Tajawal", Arial, sans-serif;
@@ -77,6 +82,7 @@
         opacity: 0;
         animation: fadeIn 0.8s ease-out forwards;
         animation-delay: calc(0.3s + var(--animation-order) * 0.1s);
+        position: relative;
       }
       .form-group:nth-child(1) {
         --animation-order: 1;
@@ -118,6 +124,11 @@
         border-color: var(--primary-color);
         background-color: var(--form-bg-color);
         outline: none;
+      }
+      input[type="tel"] {
+        direction: ltr;
+        text-align: left;
+        padding-left: 35px;
       }
       .form-group-inline {
         display: flex;
@@ -191,6 +202,11 @@
         flex: 1;
         cursor: pointer;
         font-size: 16px;
+      }
+      .checkbox-row {
+        display: flex;
+        gap: 20px;
+        width: 100%;
       }
       .file-input-container {
         display: flex;
@@ -277,8 +293,6 @@
         border-radius: 6px;
         cursor: pointer;
         font-size: 18px;
-        display: block;
-        margin: 30px auto;
         position: relative;
         transition: background-color 0.3s, transform 0.2s;
       }
@@ -408,6 +422,94 @@
         object-fit: cover;
         border-radius: 6px;
       }
+      .validation-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        display: none;
+      }
+      .form-group select ~ .validation-icon {
+        left: 30px;
+      }
+      .validation-icon.success {
+        color: var(--success-color);
+        animation: iconFadeIn 0.3s ease-in-out;
+      }
+      .validation-icon.error {
+        color: var(--error-color);
+        animation: iconFadeIn 0.3s ease-in-out;
+      }
+      @keyframes iconFadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-50%) scale(0.5);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(-50%) scale(1);
+        }
+      }
+      .error-message {
+        display: none;
+        color: var(--error-color);
+        font-size: 12px;
+        margin-top: 5px;
+        position: absolute;
+        bottom: -20px;
+        right: 0;
+      }
+      .form-group.error input,
+      .form-group.error select,
+      .form-group.error textarea {
+        border-color: var(--error-color);
+      }
+      .form-group.success input,
+      .form-group.success select,
+      .form-group.success textarea {
+        border-color: var(--success-color);
+      }
+      .submit-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: nowrap;
+      }
+      .submit-row .terms-option {
+        width: 160px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      .submit-row button[type="submit"] {
+        width: 160px;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      @media (min-width: 601px) {
+        [lang="ar"] input:not([type="tel"])::placeholder {
+          text-align: right;
+        }
+        [lang="ar"] input[type="tel"]::placeholder {
+          text-align: left;
+        }
+        .checkbox-group .option {
+          width: 300px;
+          margin-top: 20px;
+        }
+        .checkbox-row {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 20px;
+          width: 100%;
+        }
+        .checkbox-row .option {
+          flex: 1;
+          min-width: 0;
+        }
+      }
       @media (max-width: 600px) {
         .form-container {
           padding: 15px;
@@ -437,6 +539,7 @@
         }
         .checkbox-group .option {
           padding: 8px;
+          max-width: 100%;
         }
         .checkbox-group input[type="checkbox"] {
           width: 18px;
@@ -472,23 +575,42 @@
         .camera-modal-content video {
           max-height: 300px;
         }
-        button[type="submit"] {
+        .validation-icon {
+          left: 12px;
+          font-size: 14px;
+        }
+        .form-group select ~ .validation-icon {
+          left: 30px;
+        }
+        .error-message {
+          font-size: 10px;
+          bottom: -18px;
+        }
+        input[type="tel"] {
+          padding-left: 30px;
+        }
+        .submit-row {
+          gap: 10px;
+          margin-top: 10px;
+        }
+        .submit-row .terms-option {
+          width: 170px;
+          padding: 8px;
+          margin-top: 20px;
+        }
+        .submit-row button[type="submit"] {
+          width: 170px;
           padding: 12px 20px;
           font-size: 16px;
         }
-        #formPreview {
-          width: 100%;
-          padding: 15px;
-        }
-        #formPreview .field {
-          flex-direction: column;
-          gap: 5px;
-        }
-        #formPreview .field-label,
-        #formPreview .field-value {
-          flex: none;
-          text-align: right;
-        }
+      }
+      .edit_option{
+        width: 5px;
+        max-width: 5px;
+      }
+      .edit_div{
+        width: 600px;
+        max-width: 600px;
       }
     </style>
     <link
@@ -499,8 +621,13 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   </head>
   <body>
     <div class="mode-toggle">
@@ -515,13 +642,9 @@
         <p data-i18n="formSubtitle">شركة كروس آند سموث - التسجيل للموسم 2025</p>
       </div>
       <form id="membershipForm">
-        <div class="section-title" data-i18n="personalInfo">
-          المعلومات الشخصية
-        </div>
+        <div class="section-title" data-i18n="personalInfo">المعلومات الشخصية</div>
         <div class="form-group">
-          <label for="fullName" data-i18n="fullName"
-            >الاسم الكامل (رباعي)</label
-          >
+          <label for="fullName" data-i18n="fullName">الاسم الكامل (رباعي)</label>
           <input
             type="text"
             id="fullName"
@@ -529,39 +652,20 @@
             placeholder="أدخل الاسم الكامل"
             required
           />
+          <span class="validation-icon"></span>
+          <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
         </div>
         <div class="form-group">
-          <label for="profileImage" data-i18n="profileImage"
-            >الصورة الشخصية</label
-          >
+          <label for="profileImage" data-i18n="profileImage">الصورة الشخصية</label>
           <div class="file-input-container">
-            <div
-              class="icon-button"
-              id="uploadIcon"
-              title="رفع صورة من الملفات"
-            >
+            <div class="icon-button" id="uploadIcon" title="رفع صورة من الملفات">
               <i class="fas fa-upload"></i>
             </div>
-            <div
-              class="icon-button"
-              id="cameraIcon"
-              title="التقاط صورة بالكاميرا"
-            >
+            <div class="icon-button" id="cameraIcon" title="التقاط صورة بالكاميرا">
               <i class="fas fa-camera"></i>
             </div>
-            <input
-              type="file"
-              id="uploadImage"
-              name="profileImage"
-              accept="image/*"
-            />
-            <input
-              type="file"
-              id="cameraImage"
-              name="profileImage"
-              accept="image/*"
-              capture="user"
-            />
+            <input type="file" id="uploadImage" name="profileImage" accept="image/*" />
+            <input type="file" id="cameraImage" name="profileImage" accept="image/*" capture="user" />
             <div class="file-display" id="fileDisplay">لم يتم اختيار صورة</div>
           </div>
         </div>
@@ -572,15 +676,25 @@
               type="text"
               id="nationalId"
               name="nationalId"
-              placeholder="أدخل رقم البطاقة"
+              placeholder="أدخل رقم البطاقة (14 رقمًا)"
+              pattern="[0-9]{14}"
+              title="يرجى إدخال رقم بطاقة مكون من 14 رقمًا"
               required
             />
+            <span class="validation-icon"></span>
+            <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
           </div>
           <div class="form-group">
-            <label for="dateOfBirth" data-i18n="dateOfBirth"
-              >تاريخ الميلاد</label
-            >
-            <input type="date" id="dateOfBirth" name="dateOfBirth" required />
+            <label for="dateOfBirth" data-i18n="dateOfBirth">تاريخ الميلاد</label>
+            <input
+              type="text"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              placeholder="يوم/شهر/سنة"
+              required
+            />
+            <span class="validation-icon"></span>
+            <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
           </div>
         </div>
         <div class="form-group-inline">
@@ -594,7 +708,10 @@
               pattern="[0-9]{11}"
               title="يرجى إدخال رقم هاتف مكون من 11 رقمًا"
               required
+              dir="ltr"
             />
+            <span class="validation-icon"></span>
+            <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
           </div>
           <div class="form-group">
             <label for="email" data-i18n="email">البريد الإلكتروني</label>
@@ -604,6 +721,8 @@
               name="email"
               placeholder="أدخل البريد الإلكتروني"
             />
+            <span class="validation-icon"></span>
+            <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
           </div>
         </div>
         <div class="form-group">
@@ -613,132 +732,127 @@
             <option value="male" data-i18n="male">ذكر</option>
             <option value="female" data-i18n="female">أنثى</option>
           </select>
+          <span class="validation-icon"></span>
+          <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
         </div>
 
-        <div class="section-title" data-i18n="membershipDetails">
-          تفاصيل العضوية
-        </div>
+        <div class="section-title" data-i18n="membershipDetails">تفاصيل العضوية</div>
         <div class="form-group">
-          <label for="membershipType" data-i18n="membershipType"
-            >نوع العضوية</label
-          >
+          <label for="membershipType" data-i18n="membershipType">نوع العضوية</label>
           <select id="membershipType" name="membershipType" required>
-            <option value="" data-i18n="selectMembership">
-              اختر نوع العضوية
-            </option>
+            <option value="" data-i18n="selectMembership">اختر نوع العضوية</option>
             <option value="monthly" data-i18n="monthly">شهري</option>
             <option value="quarterly" data-i18n="quarterly">ربع سنوي</option>
             <option value="annual" data-i18n="annual">سنوي</option>
           </select>
+          <span class="validation-icon"></span>
+          <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
         </div>
         <div class="form-group">
-          <label for="swimmingLevel" data-i18n="swimmingLevel"
-            >المستوى في السباحة</label
-          >
+          <label for="swimmingLevel" data-i18n="swimmingLevel">المستوى في السباحة</label>
           <select id="swimmingLevel" name="swimmingLevel" required>
             <option value="" data-i18n="selectLevel">اختر المستوى</option>
             <option value="beginner" data-i18n="beginner">مبتدئ</option>
             <option value="intermediate" data-i18n="intermediate">متوسط</option>
             <option value="advanced" data-i18n="advanced">متقدم</option>
           </select>
+          <span class="validation-icon"></span>
+          <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
         </div>
         <div class="checkbox-group">
           <label data-i18n="trainingDays">الأيام المفضلة للتدريب</label>
-          <div class="option">
-            <input
-              type="checkbox"
-              id="sunday"
-              name="trainingDays"
-              value="sunday"
-            />
-            <label for="sunday" data-i18n="sunday">الأحد</label>
+          <div class="checkbox-row">
+            <div class="option">
+              <input type="checkbox" class="edit_option" id="saturday" name="trainingDays" value="saturday" />
+              <label for="saturday" data-i18n="saturday">السبت</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="sunday" class="edit_option" name="trainingDays" value="sunday" />
+              <label for="sunday" data-i18n="sunday">الأحد</label>
+            </div>
           </div>
-          <div class="option">
-            <input
-              type="checkbox"
-              id="monday"
-              name="trainingDays"
-              value="monday"
-            />
-            <label for="monday" data-i18n="monday">الإثنين</label>
+          <div class="checkbox-row">
+            <div class="option">
+              <input type="checkbox" id="monday" name="trainingDays" class="edit_option" value="monday" />
+              <label for="monday" data-i18n="monday">الإثنين</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="tuesday" name="trainingDays" value="tuesday" class="edit_option" />
+              <label for="tuesday" data-i18n="tuesday">الثلاثاء</label>
+            </div>
           </div>
-          <div class="option">
-            <input
-              type="checkbox"
-              id="tuesday"
-              name="trainingDays"
-              value="tuesday"
-            />
-            <label for="tuesday" data-i18n="tuesday">الثلاثاء</label>
-          </div>
-          <div class="option">
-            <input
-              type="checkbox"
-              id="wednesday"
-              name="trainingDays"
-              value="wednesday"
-            />
-            <label for="wednesday" data-i18n="wednesday">الأربعاء</label>
-          </div>
-          <div class="option">
-            <input
-              type="checkbox"
-              id="thursday"
-              name="trainingDays"
-              value="thursday"
-            />
-            <label for="thursday" data-i18n="thursday">الخميس</label>
+          <div class="checkbox-row">
+            <div class="option">
+              <input type="checkbox" id="wednesday" name="trainingDays" value="wednesday" class="edit_option" />
+              <label for="wednesday" data-i18n="wednesday">الأربعاء</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="thursday" name="trainingDays" value="thursday" class="edit_option" />
+              <label for="thursday" data-i18n="thursday">الخميس</label>
+            </div>
           </div>
         </div>
 
-        <div class="section-title" data-i18n="additionalInfo">
-          معلومات إضافية
-        </div>
+        <div class="section-title" data-i18n="additionalInfo">معلومات إضافية</div>
         <div class="form-group">
-          <label for="healthConditions" data-i18n="healthConditions"
-            >الحالة الصحية (إن وجدت)</label
-          >
+          <label for="healthConditions" data-i18n="healthConditions">الحالة الصحية (إن وجدت)</label>
           <textarea
             id="healthConditions"
             name="healthConditions"
             rows="4"
             placeholder="يرجى ذكر أي حالات صحية أو حساسية"
           ></textarea>
+          <span class="validation-icon"></span>
+          <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
         </div>
-        <div class="form-group">
-          <label for="emergencyContact" data-i18n="emergencyContact"
-            >جهة اتصال في حالات الطوارئ</label
-          >
-          <input
-            type="text"
-            id="emergencyContact"
-            name="emergencyContact"
-            placeholder="الاسم ورقم الهاتف"
-            required
-          />
-        </div>
-        <div class="checkbox-group">
-          <div class="option">
-            <input type="checkbox" id="terms" name="terms" required />
-            <label for="terms" data-i18n="terms"
-              >أوافق على شروط وأحكام العضوية</label
-            >
+        <div class="form-group-inline">
+          <div class="form-group">
+            <label for="emergencyContactName" data-i18n="emergencyContactName">اسم جهة الاتصال</label>
+            <input
+              type="text"
+              id="emergencyContactName"
+              name="emergencyContactName"
+              placeholder="أدخل اسم جهة الاتصال"
+              required
+            />
+            <span class="validation-icon"></span>
+            <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
+          </div>
+          <div class="form-group">
+            <label for="emergencyContactPhone" data-i18n="emergencyContactPhone">رقم جهة الاتصال</label>
+            <input
+              type="tel"
+              id="emergencyContactPhone"
+              name="emergencyContactPhone"
+              placeholder="أدخل رقم الهاتف"
+              pattern="[0-9]{11}"
+              title="يرجى إدخال رقم هاتف مكون من 11 رقمًا"
+              required
+              dir="ltr"
+            />
+            <span class="validation-icon"></span>
+            <span class="error-message" data-i18n="invalidInput">يرجى إدخال بيانات صحيحة</span>
           </div>
         </div>
-
-        <button type="submit" data-i18n="submit">
-          <span>إرسال الاستمارة</span>
-          <div class="loader"></div>
-        </button>
+        <div class="submit-row">
+          <div class="checkbox-group">
+            <div class="option terms-option edit_div">
+              <input type="checkbox" id="terms" name="terms" required class="edit_option" />
+              <label class="edit_label" for="terms" data-i18n="terms">أوافق على شروط وأحكام العضوية</label>
+            </div>
+          </div>
+          <button type="submit" data-i18n="submit">
+            <span>إرسال الاستمارة</span>
+            <div class="loader"></div>
+          </button>
+        </div>
       </form>
     </div>
 
     <div class="camera-modal" id="cameraModal">
       <div class="camera-modal-content">
         <video id="cameraStream" autoplay></video>
-        <button id="switchCameraButton" data-i18n="switchCamera">
-          تبديل الكاميرا
-        </button>
+        <button id="switchCameraButton" data-i18n="switchCamera">تبديل الكاميرا</button>
         <button id="captureButton" data-i18n="capture">التقاط الصورة</button>
         <button id="closeCameraButton" data-i18n="close">إغلاق</button>
       </div>
@@ -749,55 +863,59 @@
       <p data-i18n="formSubtitle"></p>
       <div class="section-title" data-i18n="personalInfo"></div>
       <div class="field">
-        <span class="field-label" data-i18n="fullName"></span
-        ><span class="field-value" id="previewFullName"></span>
+        <span class="field-label" data-i18n="fullName"></span>
+        <span class="field-value" id="previewFullName"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="nationalId"></span
-        ><span class="field-value" id="previewNationalId"></span>
+        <span class="field-label" data-i18n="nationalId"></span>
+        <span class="field-value" id="previewNationalId"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="dateOfBirth"></span
-        ><span class="field-value" id="previewDateOfBirth"></span>
+        <span class="field-label" data-i18n="dateOfBirth"></span>
+        <span class="field-value" id="previewDateOfBirth"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="phone"></span
-        ><span class="field-value" id="previewPhone"></span>
+        <span class="field-label" data-i18n="phone"></span>
+        <span class="field-value" id="previewPhone"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="email"></span
-        ><span class="field-value" id="previewEmail"></span>
+        <span class="field-label" data-i18n="email"></span>
+        <span class="field-value" id="previewEmail"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="gender"></span
-        ><span class="field-value" id="previewGender"></span>
+        <span class="field-label" data-i18n="gender"></span>
+        <span class="field-value" id="previewGender"></span>
       </div>
       <img id="previewImage" style="display: none" />
       <div class="section-title" data-i18n="membershipDetails"></div>
       <div class="field">
-        <span class="field-label" data-i18n="membershipType"></span
-        ><span class="field-value" id="previewMembershipType"></span>
+        <span class="field-label" data-i18n="membershipType"></span>
+        <span class="field-value" id="previewMembershipType"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="swimmingLevel"></span
-        ><span class="field-value" id="previewSwimmingLevel"></span>
+        <span class="field-label" data-i18n="swimmingLevel"></span>
+        <span class="field-value" id="previewSwimmingLevel"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="trainingDays"></span
-        ><span class="field-value" id="previewTrainingDays"></span>
+        <span class="field-label" data-i18n="trainingDays"></span>
+        <span class="field-value" id="previewTrainingDays"></span>
       </div>
       <div class="section-title" data-i18n="additionalInfo"></div>
       <div class="field">
-        <span class="field-label" data-i18n="healthConditions"></span
-        ><span class="field-value" id="previewHealthConditions"></span>
+        <span class="field-label" data-i18n="healthConditions"></span>
+        <span class="field-value" id="previewHealthConditions"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="emergencyContact"></span
-        ><span class="field-value" id="previewEmergencyContact"></span>
+        <span class="field-label" data-i18n="emergencyContactName"></span>
+        <span class="field-value" id="previewEmergencyContactName"></span>
       </div>
       <div class="field">
-        <span class="field-label" data-i18n="terms"></span
-        ><span class="field-value" id="previewTerms"></span>
+        <span class="field-label" data-i18n="emergencyContactPhone"></span>
+        <span class="field-value" id="previewEmergencyContactPhone"></span>
+      </div>
+      <div class="field">
+        <span class="field-label" data-i18n="terms"></span>
+        <span class="field-value" id="previewTerms"></span>
       </div>
     </div>
 
@@ -829,6 +947,7 @@
           intermediate: "متوسط",
           advanced: "متقدم",
           trainingDays: "الأيام المفضلة للتدريب",
+          saturday: "السبت",
           sunday: "الأحد",
           monday: "الإثنين",
           tuesday: "الثلاثاء",
@@ -836,7 +955,8 @@
           thursday: "الخميس",
           additionalInfo: "معلومات إضافية",
           healthConditions: "الحالة الصحية (إن وجدت)",
-          emergencyContact: "جهة اتصال في حالات الطوارئ",
+          emergencyContactName: "اسم جهة الاتصال في الطوارئ",
+          emergencyContactPhone: "رقم جهة الاتصال في الطوارئ",
           terms: "أوافق على شروط وأحكام العضوية",
           submit: "إرسال الاستمارة",
           successTitle: "تم الإرسال بنجاح!",
@@ -859,6 +979,7 @@
           requiredFields: "يرجى ملء جميع الحقول المطلوبة",
           serverError:
             "فشل في إرسال الصورة إلى واتساب. يرجى إرفاق الصورة المُنزلة يدويًا إلى +201060940751 عبر واتساب.",
+          invalidInput: "يرجى إدخال بيانات صحيحة",
         },
         en: {
           formTitle: "Swimming Activity Membership Form",
@@ -886,6 +1007,7 @@
           intermediate: "Intermediate",
           advanced: "Advanced",
           trainingDays: "Preferred Training Days",
+          saturday: "Saturday",
           sunday: "Sunday",
           monday: "Monday",
           tuesday: "Tuesday",
@@ -893,7 +1015,8 @@
           thursday: "Thursday",
           additionalInfo: "Additional Information",
           healthConditions: "Health Conditions (if any)",
-          emergencyContact: "Emergency Contact",
+          emergencyContactName: "Emergency Contact Name",
+          emergencyContactPhone: "Emergency Contact Phone",
           terms: "I agree to the membership terms and conditions",
           submit: "Submit Form",
           successTitle: "Submitted Successfully!",
@@ -916,6 +1039,7 @@
           requiredFields: "Please fill all required fields",
           serverError:
             "Failed to send the image to WhatsApp. Please attach the downloaded image manually to +201060940751 via WhatsApp.",
+          invalidInput: "Please enter valid data",
         },
       };
 
@@ -926,8 +1050,7 @@
       updateThemeButton(savedTheme);
 
       themeToggle.addEventListener("click", () => {
-        const currentTheme =
-          body.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        const currentTheme = body.getAttribute("data-theme") === "dark" ? "light" : "dark";
         body.setAttribute("data-theme", currentTheme);
         localStorage.setItem("theme", currentTheme);
         updateThemeButton(currentTheme);
@@ -951,8 +1074,7 @@
         currentLanguage = currentLanguage === "ar" ? "en" : "ar";
         localStorage.setItem("language", currentLanguage);
         document.documentElement.lang = currentLanguage === "ar" ? "ar" : "en";
-        document.body.style.direction =
-          currentLanguage === "ar" ? "rtl" : "ltr";
+        document.body.style.direction = currentLanguage === "ar" ? "rtl" : "ltr";
         updateLanguage(currentLanguage);
         updateLanguageButton(currentLanguage);
       });
@@ -962,8 +1084,7 @@
           const key = element.getAttribute("data-i18n");
           if (element.tagName === "BUTTON") {
             if (element.querySelector("span")) {
-              element.querySelector("span").textContent =
-                translations[lang][key];
+              element.querySelector("span").textContent = translations[lang][key];
             } else {
               element.textContent = translations[lang][key];
             }
@@ -996,6 +1117,8 @@
         `;
         const fileDisplay = document.getElementById("fileDisplay");
         fileDisplay.textContent = translations[lang].noImageSelected;
+        document.getElementById("dateOfBirth").placeholder =
+          lang === "ar" ? "يوم/شهر/سنة" : "DD/MM/YYYY";
       }
 
       function updateLanguageButton(lang) {
@@ -1004,6 +1127,23 @@
             ? '<i class="fas fa-globe"></i> English'
             : '<i class="fas fa-globe"></i> العربية';
       }
+
+      flatpickr("#dateOfBirth", {
+        dateFormat: "d/m/Y",
+        locale: currentLanguage === "ar" ? "ar" : "en",
+        maxDate: "today",
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.documentElement.addEventListener("langchange", () => {
+          flatpickr("#dateOfBirth").destroy();
+          flatpickr("#dateOfBirth", {
+            dateFormat: "d/m/Y",
+            locale: currentLanguage === "ar" ? "ar" : "en",
+            maxDate: "today",
+          });
+        });
+      });
 
       const uploadIcon = document.getElementById("uploadIcon");
       const cameraIcon = document.getElementById("cameraIcon");
@@ -1065,8 +1205,7 @@
       }
 
       switchCameraButton.addEventListener("click", async () => {
-        currentFacingMode =
-          currentFacingMode === "user" ? "environment" : "user";
+        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
         try {
           await startCamera(currentFacingMode);
         } catch (error) {
@@ -1117,12 +1256,10 @@
         if (selectedFile) {
           fileDisplay.textContent = selectedFile.name;
           capturedFile = null;
-          const otherInput =
-            this === uploadImageInput ? cameraImageInput : uploadImageInput;
+          const otherInput = this === uploadImageInput ? cameraImageInput : uploadImageInput;
           otherInput.value = "";
         } else {
-          fileDisplay.textContent =
-            translations[currentLanguage].noImageSelected;
+          fileDisplay.textContent = translations[currentLanguage].noImageSelected;
         }
       }
 
@@ -1131,7 +1268,7 @@
 
       function formatDate(dateStr) {
         if (!dateStr) return "";
-        const [year, month, day] = dateStr.split("-");
+        const [day, month, year] = dateStr.split("/");
         return `${day}/${month}/${year}`;
       }
 
@@ -1144,194 +1281,316 @@
         });
       }
 
-      document
-        .getElementById("membershipForm")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault();
+      function validateInput(input) {
+        const isRequired = input.hasAttribute("required");
+        const value = input.value.trim();
+        const type = input.type;
+        const id = input.id;
 
-          const submitButton = this.querySelector('button[type="submit"]');
-          submitButton.classList.add("loading");
-          submitButton.disabled = true;
+        if (!value && !isRequired) {
+          return true;
+        }
 
-          try {
-            const formData = new FormData(this);
-            if (
-              !formData.get("fullName") ||
-              !formData.get("nationalId") ||
-              !formData.get("dateOfBirth") ||
-              !formData.get("phone") ||
-              !formData.get("gender") ||
-              !formData.get("membershipType") ||
-              !formData.get("swimmingLevel") ||
-              !formData.get("emergencyContact") ||
-              !formData.get("terms")
-            ) {
-              throw new Error(translations[currentLanguage].requiredFields);
-            }
+        if (!value && isRequired) {
+          return false;
+        }
 
-            const data = {
-              fullName: formData.get("fullName"),
-              nationalId: formData.get("nationalId"),
-              dateOfBirth: formatDate(formData.get("dateOfBirth")),
-              phone: formData.get("phone"),
-              email:
-                formData.get("email") ||
-                translations[currentLanguage].notProvided,
-              gender: formData.get("gender"),
-              membershipType: formData.get("membershipType"),
-              swimmingLevel: formData.get("swimmingLevel"),
-              trainingDays:
-                formData
-                  .getAll("trainingDays")
-                  .map((day) => translations[currentLanguage][day] || day)
-                  .join(", ") || translations[currentLanguage].noneSelected,
-              healthConditions:
-                formData.get("healthConditions") ||
-                translations[currentLanguage].none,
-              emergencyContact: formData.get("emergencyContact"),
-              terms: formData.get("terms")
-                ? translations[currentLanguage].agreed
-                : translations[currentLanguage].notAgreed,
-              profileImage: capturedFile || formData.get("profileImage"),
-            };
+        if (id === "fullName") {
+          return value.length >= 2;
+        }
 
-            console.log("Form data:", data);
+        if (id === "nationalId") {
+          const regex = /^[0-9]{14}$/;
+          return regex.test(value);
+        }
 
-            const formPreview = document.getElementById("formPreview");
-            formPreview.style.direction =
-              currentLanguage === "ar" ? "rtl" : "ltr";
-            formPreview.style.position = "absolute";
-            formPreview.style.top = "0";
-            formPreview.style.left = "0";
-            formPreview.style.zIndex = "-1";
+        if (id === "dateOfBirth") {
+          const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+          if (!regex.test(value)) return false;
+          const [day, month, year] = value.split("/").map(Number);
+          const date = new Date(year, month - 1, day);
+          return (
+            date.getDate() === day &&
+            date.getMonth() + 1 === month &&
+            date.getFullYear() === year &&
+            date <= new Date()
+          );
+        }
 
-            document.getElementById("previewFullName").textContent =
-              data.fullName;
-            document.getElementById("previewNationalId").textContent =
-              data.nationalId;
-            document.getElementById("previewDateOfBirth").textContent =
-              data.dateOfBirth;
-            document.getElementById("previewPhone").textContent = data.phone;
-            document.getElementById("previewEmail").textContent = data.email;
-            document.getElementById("previewGender").textContent =
-              data.gender === "male"
-                ? translations[currentLanguage].male
-                : translations[currentLanguage].female;
-            document.getElementById("previewMembershipType").textContent =
-              data.membershipType === "monthly"
-                ? translations[currentLanguage].monthly
-                : data.membershipType === "quarterly"
-                ? translations[currentLanguage].quarterly
-                : translations[currentLanguage].annual;
-            document.getElementById("previewSwimmingLevel").textContent =
-              data.swimmingLevel === "beginner"
-                ? translations[currentLanguage].beginner
-                : data.swimmingLevel === "intermediate"
-                ? translations[currentLanguage].intermediate
-                : translations[currentLanguage].advanced;
-            document.getElementById("previewTrainingDays").textContent =
-              data.trainingDays;
-            document.getElementById("previewHealthConditions").textContent =
-              data.healthConditions;
-            document.getElementById("previewEmergencyContact").textContent =
-              data.emergencyContact;
-            document.getElementById("previewTerms").textContent = data.terms;
+        if (id === "phone" || id === "emergencyContactPhone") {
+          const regex = /^[0-9]{11}$/;
+          return regex.test(value);
+        }
 
-            const previewImage = document.getElementById("previewImage");
-            if (data.profileImage && data.profileImage.size > 0) {
-              const imageDataURL = await getImageDataURL(data.profileImage);
-              previewImage.src = imageDataURL;
-              previewImage.style.display = "block";
-            } else {
-              previewImage.style.display = "none";
-            }
+        if (id === "email") {
+          const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return value === "" || regex.test(value);
+        }
 
-            const canvas = await html2canvas(formPreview, {
-              backgroundColor: "#ffffff",
-              scale: 2,
-            });
+        if (id === "gender" || id === "membershipType" || id === "swimmingLevel") {
+          return value !== "";
+        }
 
-            formPreview.style.position = "fixed";
-            formPreview.style.top = "-9999px";
-            formPreview.style.left = "-9999px";
+        if (id === "emergencyContactName") {
+          return value.length >= 2;
+        }
 
-            const imageDataURL = canvas.toDataURL("image/png");
+        if (id === "healthConditions") {
+          return true;
+        }
 
-            const downloadLink = document.createElement("a");
-            downloadLink.href = imageDataURL;
-            downloadLink.download =
-              currentLanguage === "ar"
-                ? "استمارة_عضوية_السباحة.png"
-                : "Swimming_Membership_Form.png";
-            downloadLink.click();
+        return true;
+      }
 
-            const whatsappMessage = encodeURIComponent(
-              currentLanguage === "ar"
-                ? `استمارة عضوية السباحة\n` +
-                    `الاسم: ${data.fullName}\n` +
-                    `رقم البطاقة: ${data.nationalId}\n` +
-                    `تاريخ الميلاد: ${data.dateOfBirth}\n` +
-                    `رقم الهاتف: ${data.phone}\n` +
-                    `البريد الإلكتروني: ${data.email}\n` +
-                    `الجنس: ${data.gender === "male" ? "ذكر" : "أنثى"}\n` +
-                    `نوع العضوية: ${
-                      data.membershipType === "monthly"
-                        ? "شهري"
-                        : data.membershipType === "quarterly"
-                        ? "ربع سنوي"
-                        : "سنوي"
-                    }\n` +
-                    `مستوى السباحة: ${
-                      data.swimmingLevel === "beginner"
-                        ? "مبتدئ"
-                        : data.swimmingLevel === "intermediate"
-                        ? "متوسط"
-                        : "متقدم"
-                    }\n` +
-                    `أيام التدريب: ${data.trainingDays}\n` +
-                    `الحالة الصحية: ${data.healthConditions}\n` +
-                    `جهة الاتصال في الطوارئ: ${data.emergencyContact}\n` +
-                    `يرجى إرفاق الصورة المُنزلة من جهازك.`
-                : `Swimming Membership Form\n` +
-                    `Name: ${data.fullName}\n` +
-                    `National ID: ${data.nationalId}\n` +
-                    `Date of Birth: ${data.dateOfBirth}\n` +
-                    `Phone: ${data.phone}\n` +
-                    `Email: ${data.email}\n` +
-                    `Gender: ${data.gender === "male" ? "Male" : "Female"}\n` +
-                    `Membership Type: ${data.membershipType}\n` +
-                    `Swimming Level: ${data.swimmingLevel}\n` +
-                    `Training Days: ${data.trainingDays}\n` +
-                    `Health Conditions: ${data.healthConditions}\n` +
-                    `Emergency Contact: ${data.emergencyContact}\n` +
-                    `Please attach the downloaded image from your device.`
-            );
+      function showValidationIcon(input, isValid) {
+        const formGroup = input.closest(".form-group");
+        if (!formGroup) return;
 
-            const whatsappLink = `https://api.whatsapp.com/send?phone=+201060940751&text=${whatsappMessage}`;
+        const icon = formGroup.querySelector(".validation-icon");
+        const errorMessage = formGroup.querySelector(".error-message");
 
-            Swal.fire({
-              icon: "success",
-              title: translations[currentLanguage].successTitle,
-              text: translations[currentLanguage].successText,
-              confirmButtonText: translations[currentLanguage].ok,
-              confirmButtonColor: "#3498db",
-            }).then(() => {
-              window.open(whatsappLink, "_blank");
-            });
-          } catch (error) {
-            console.error("Form submission error:", error);
-            Swal.fire({
-              icon: "error",
-              title: translations[currentLanguage].errorTitle,
-              text: translations[currentLanguage].errorText,
-              confirmButtonText: translations[currentLanguage].ok,
-              confirmButtonColor: "#3498db",
-            });
-          } finally {
-            submitButton.classList.remove("loading");
-            submitButton.disabled = false;
+        if (!icon || !errorMessage) return;
+
+        icon.style.display = "none";
+        icon.classList.remove("success", "error");
+        formGroup.classList.remove("success", "error");
+        errorMessage.style.display = "none";
+
+        if (input.value.trim() === "" && !input.hasAttribute("required")) {
+          return;
+        }
+
+        if (isValid) {
+          icon.classList.add("success");
+          icon.innerHTML = '<i class="fas fa-check"></i>';
+          icon.style.display = "block";
+          formGroup.classList.add("success");
+        } else {
+          icon.classList.add("error");
+          icon.innerHTML = '<i class="fas fa-times"></i>';
+          icon.style.display = "block";
+          formGroup.classList.add("error");
+          errorMessage.style.display = "block";
+        }
+      }
+
+      document.querySelectorAll("input, select, textarea").forEach((input) => {
+        if (input.type !== "file" && input.id !== "terms") {
+          input.addEventListener("focusout", () => {
+            const isValid = validateInput(input);
+            showValidationIcon(input, isValid);
+          });
+
+          input.addEventListener("input", () => {
+            const isValid = validateInput(input);
+            showValidationIcon(input, isValid);
+          });
+        }
+      });
+
+      document.getElementById("membershipForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.classList.add("loading");
+        submitButton.disabled = true;
+
+        let hasError = false;
+        document.querySelectorAll("input, select, textarea").forEach((input) => {
+          if (input.type !== "file" && input.id !== "terms") {
+            const isValid = validateInput(input);
+            showValidationIcon(input, isValid);
+            if (!isValid) hasError = true;
           }
         });
+
+        if (hasError) {
+          Swal.fire({
+            icon: "error",
+            title: translations[currentLanguage].errorTitle,
+            text: translations[currentLanguage].requiredFields,
+            confirmButtonText: translations[currentLanguage].ok,
+            confirmButtonColor: "#3498db",
+          });
+          submitButton.classList.remove("loading");
+          submitButton.disabled = false;
+          return;
+        }
+
+        try {
+          const formData = new FormData(this);
+          if (
+            !formData.get("fullName") ||
+            !formData.get("nationalId") ||
+            !formData.get("dateOfBirth") ||
+            !formData.get("phone") ||
+            !formData.get("gender") ||
+            !formData.get("membershipType") ||
+            !formData.get("swimmingLevel") ||
+            !formData.get("emergencyContactName") ||
+            !formData.get("emergencyContactPhone") ||
+            !formData.get("terms")
+          ) {
+            throw new Error(translations[currentLanguage].requiredFields);
+          }
+
+          const data = {
+            fullName: formData.get("fullName"),
+            nationalId: formData.get("nationalId"),
+            dateOfBirth: formatDate(formData.get("dateOfBirth")),
+            phone: formData.get("phone"),
+            email: formData.get("email") || translations[currentLanguage].notProvided,
+            gender: formData.get("gender"),
+            membershipType: formData.get("membershipType"),
+            swimmingLevel: formData.get("swimmingLevel"),
+            trainingDays:
+              formData
+                .getAll("trainingDays")
+                .map((day) => translations[currentLanguage][day] || day)
+                .join(", ") || translations[currentLanguage].noneSelected,
+            healthConditions:
+              formData.get("healthConditions") || translations[currentLanguage].none,
+            emergencyContactName: formData.get("emergencyContactName"),
+            emergencyContactPhone: formData.get("emergencyContactPhone"),
+            terms: formData.get("terms")
+              ? translations[currentLanguage].agreed
+              : translations[currentLanguage].notAgreed,
+            profileImage: capturedFile || formData.get("profileImage"),
+          };
+
+          console.log("Form data:", data);
+
+          const formPreview = document.getElementById("formPreview");
+          formPreview.style.direction = currentLanguage === "ar" ? "rtl" : "ltr";
+          formPreview.style.position = "absolute";
+          formPreview.style.top = "0";
+          formPreview.style.left = "0";
+          formPreview.style.zIndex = "-1";
+
+          document.getElementById("previewFullName").textContent = data.fullName;
+          document.getElementById("previewNationalId").textContent = data.nationalId;
+          document.getElementById("previewDateOfBirth").textContent = data.dateOfBirth;
+          document.getElementById("previewPhone").textContent = data.phone;
+          document.getElementById("previewEmail").textContent = data.email;
+          document.getElementById("previewGender").textContent =
+            data.gender === "male"
+              ? translations[currentLanguage].male
+              : translations[currentLanguage].female;
+          document.getElementById("previewMembershipType").textContent =
+            data.membershipType === "monthly"
+              ? translations[currentLanguage].monthly
+              : data.membershipType === "quarterly"
+              ? translations[currentLanguage].quarterly
+              : translations[currentLanguage].annual;
+          document.getElementById("previewSwimmingLevel").textContent =
+            data.swimmingLevel === "beginner"
+              ? translations[currentLanguage].beginner
+              : data.swimmingLevel === "intermediate"
+              ? translations[currentLanguage].intermediate
+              : translations[currentLanguage].advanced;
+          document.getElementById("previewTrainingDays").textContent = data.trainingDays;
+          document.getElementById("previewHealthConditions").textContent = data.healthConditions;
+          document.getElementById("previewEmergencyContactName").textContent = data.emergencyContactName;
+          document.getElementById("previewEmergencyContactPhone").textContent = data.emergencyContactPhone;
+          document.getElementById("previewTerms").textContent = data.terms;
+
+          const previewImage = document.getElementById("previewImage");
+          if (data.profileImage && data.profileImage.size > 0) {
+            const imageDataURL = await getImageDataURL(data.profileImage);
+            previewImage.src = imageDataURL;
+            previewImage.style.display = "block";
+          } else {
+            previewImage.style.display = "none";
+          }
+
+          const canvas = await html2canvas(formPreview, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+          });
+
+          formPreview.style.position = "fixed";
+          formPreview.style.top = "-9999px";
+          formPreview.style.left = "-9999px";
+
+          const imageDataURL = canvas.toDataURL("image/png");
+
+          const downloadLink = document.createElement("a");
+          downloadLink.href = imageDataURL;
+          downloadLink.download =
+            currentLanguage === "ar"
+              ? "استمارة_عضوية_السباحة.png"
+              : "Swimming_Membership_Form.png";
+          downloadLink.click();
+
+          const whatsappMessage = encodeURIComponent(
+            currentLanguage === "ar"
+              ? `استمارة عضوية السباحة\n` +
+                `الاسم: ${data.fullName}\n` +
+                `رقم البطاقة: ${data.nationalId}\n` +
+                `تاريخ الميلاد: ${data.dateOfBirth}\n` +
+                `رقم الهاتف: ${data.phone}\n` +
+                `البريد الإلكتروني: ${data.email}\n` +
+                `الجنس: ${data.gender === "male" ? "ذكر" : "أنثى"}\n` +
+                `نوع العضوية: ${
+                  data.membershipType === "monthly"
+                    ? "شهري"
+                    : data.membershipType === "quarterly"
+                    ? "ربع سنوي"
+                    : "سنوي"
+                }\n` +
+                `مستوى السباحة: ${
+                  data.swimmingLevel === "beginner"
+                    ? "مبتدئ"
+                    : data.swimmingLevel === "intermediate"
+                    ? "متوسط"
+                    : "متقدم"
+                }\n` +
+                `أيام التدريب: ${data.trainingDays}\n` +
+                `الحالة الصحية: ${data.healthConditions}\n` +
+                `اسم جهة الاتصال في الطوارئ: ${data.emergencyContactName}\n` +
+                `رقم جهة الاتصال في الطوارئ: ${data.emergencyContactPhone}\n` +
+                `يرجى إرفاق الصورة المُنزلة من جهازك.`
+              : `Swimming Membership Form\n` +
+                `Name: ${data.fullName}\n` +
+                `National ID: ${data.nationalId}\n` +
+                `Date of Birth: ${data.dateOfBirth}\n` +
+                `Phone: ${data.phone}\n` +
+                `Email: ${data.email}\n` +
+                `Gender: ${data.gender === "male" ? "Male" : "Female"}\n` +
+                `Membership Type: ${data.membershipType}\n` +
+                `Swimming Level: ${data.swimmingLevel}\n` +
+                `Training Days: ${data.trainingDays}\n` +
+                `Health Conditions: ${data.healthConditions}\n` +
+                `Emergency Contact Name: ${data.emergencyContactName}\n` +
+                `Emergency Contact Phone: ${data.emergencyContactPhone}\n` +
+                `Please attach the downloaded image from your device.`
+          );
+
+          const whatsappLink = `https://api.whatsapp.com/send?phone=+201060940751&text=${whatsappMessage}`;
+
+          Swal.fire({
+            icon: "success",
+            title: translations[currentLanguage].successTitle,
+            text: translations[currentLanguage].successText,
+            confirmButtonText: translations[currentLanguage].ok,
+            confirmButtonColor: "#3498db",
+          }).then(() => {
+            window.open(whatsappLink, "_blank");
+          });
+        } catch (error) {
+          console.error("Form submission error:", error);
+          Swal.fire({
+            icon: "error",
+            title: translations[currentLanguage].errorTitle,
+            text: translations[currentLanguage].errorText,
+            confirmButtonText: translations[currentLanguage].ok,
+            confirmButtonColor: "#3498db",
+          });
+        } finally {
+          submitButton.classList.remove("loading");
+          submitButton.disabled = false;
+        }
+      });
     </script>
   </body>
 </html>
